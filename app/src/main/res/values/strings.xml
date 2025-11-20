@@ -1,0 +1,68 @@
+<resources>
+    <string name="app_name">3T Computer Shop</string>
+
+    <!-- Bottom Navigation -->
+    <string name="title_home">Home</string>
+    <string name="title_orders">My Orders</string>
+    <string name="title_profile">Profile</string>
+
+    <!-- Auth -->
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="dont_have_account">Don\'t have an account? <b>Sign Up</b></string>
+
+    <!-- Product Detail -->
+    <string name="product_details">Product Details</string>
+    <string name="add_to_cart">Add to Cart</string>
+    <string name="description">Description</string>
+    <string name="specifications">Specifications</string>
+
+    <!-- Cart -->
+    <string name="your_cart">Your Cart</string>
+    <string name="total_price">Total:</string>
+    <string name="proceed_to_checkout">Proceed to Checkout</string>
+    <string name="cart_is_empty">Your cart is empty.</string>
+
+    <!-- Checkout -->
+    <string name="checkout">Checkout</string>
+    <string name="shipping_information">Shipping Information</string>
+    <string name="receiver_name">Receiver\'s Name</string>
+    <string name="receiver_phone">Receiver\'s Phone</string>
+    <string name="receiver_address">Receiver\'s Address</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="cod">Cash on Delivery (COD)</string>
+    <string name="momo">Momo E-Wallet</string>
+    <string name="order_summary">Order Summary</string>
+    <string name="place_order">Place Order</string>
+
+    <!-- Profile -->
+    <string name="my_profile">My Profile</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="change_password">Change Password</string>
+    <string name="order_history">Order History</string>
+    <string name="logout">Logout</string>
+
+    <!-- Thêm dòng này vào trong file res/values/strings.xml -->
+    <string name="title_products">Products</string>
+
+
+    <!-- Thêm các dòng này vào trong file res/values/strings.xml -->
+    <string name="filter">Filter</string>
+    <string name="filter_products">Filter Products</string>
+    <string name="brand">Brand</string>
+    <string name="usage_purpose">Usage Purpose</string>
+    <string name="price_range">Price Range</string>
+    <string name="sort_by">Sort By</string>
+    <string name="sort_asc">Price: Low to High</string>
+    <string name="sort_desc">Price: High to Low</string>
+    <string name="sort_none">Default</string>
+    <string name="reset">Reset</string>
+    <string name="apply">Apply</string>
+
+
+
+    <string name="default_web_client_id" translatable="false">638531987703-jtfrbslrhk2u9funp559ohkcvg9143ou.apps.googleusercontent.com</string>
+</resources>

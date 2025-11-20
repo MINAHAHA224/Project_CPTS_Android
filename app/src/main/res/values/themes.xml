@@ -1,0 +1,30 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.ComputerShop" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Bảng màu mới -->
+        <item name="colorPrimary">@color/primaryBlue</item>
+        <item name="colorPrimaryVariant">@color/primaryBlueDark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/primaryBlue</item>
+        <item name="colorSecondaryVariant">@color/primaryBlueDark</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- Background color cho toàn bộ app -->
+        <item name="android:windowBackground">@color/activityBackground</item>
+    </style>
+
+    <style name="Theme.ComputerShop" parent="Base.Theme.ComputerShop" />
+
+    <!-- Style cho ShapeableImageView -->
+    <style name="Widget.MaterialComponents.ShapeableImageView.ShapeAppearance.LargeComponent" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.ShapeableImageView.ShapeAppearance.SmallComponent" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+</resources>

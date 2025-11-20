@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        style="@style/TextAppearance.Material3.TitleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Liên Hệ Với Chúng Tôi" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:drawablePadding="12dp"
+        android:gravity="center_vertical"
+        android:text="11 Nguyễn Đình Chiểu, P. Đa Kao, Q.1 TP.HCM"
+        app:drawableStartCompat="@drawable/ic_location" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:drawablePadding="12dp"
+        android:gravity="center_vertical"
+        android:text="support@3tlap.vn"
+        app:drawableStartCompat="@drawable/ic_email" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:drawablePadding="12dp"
+        android:gravity="center_vertical"
+        android:text="(+84) 1900 8888"
+        app:drawableStartCompat="@drawable/ic_phone" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:drawablePadding="12dp"
+        android:gravity="center_vertical"
+        android:text="Thứ 2 - Thứ 7: 08:00 - 21:00"
+        app:drawableStartCompat="@drawable/ic_time" />
+</LinearLayout>
