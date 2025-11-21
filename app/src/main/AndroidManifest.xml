@@ -31,8 +31,6 @@
         <activity android:name=".activities.ProductDetailActivity" />
         <activity android:name=".activities.CartActivity" />
         <activity android:name=".activities.CheckoutActivity" />
-        <activity android:name=".activities.OrderHistoryActivity" />
-        <activity android:name=".activities.ProfileActivity" />
         <activity android:name=".activities.VerifyOtpActivity" />
         <activity android:name=".activities.ResetPasswordActivity" />
         <activity android:name=".activities.ForgotPasswordActivity" />
