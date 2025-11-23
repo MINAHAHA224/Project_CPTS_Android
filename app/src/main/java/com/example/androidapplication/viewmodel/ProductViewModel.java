@@ -26,8 +26,8 @@ public class ProductViewModel extends AndroidViewModel {
         return isLoading;
     }
 
-    public LiveData<ApiResponse<List<Product>>> getAllProducts() {
-        return productRepository.getAllProducts();
+    public LiveData<ApiResponse<List<Product>>> getAllProducts(String search) {
+        return productRepository.getAllProducts(search);
     }
 
     public LiveData<ApiResponse<ProductDetail>> getProductDetail(long productId) {

@@ -44,7 +44,7 @@ public interface ApiService {
     Call<ApiResponse<Map<String, List<String>>>> getFilterOptions();
 
     @GET("/api/v1/products")
-    Call<ApiResponse<List<Product>>> getAllProducts();
+    Call<ApiResponse<List<Product>>> getAllProducts(@Query("search") String search);
 
     @GET("/api/v1/products/filter")
     Call<ApiResponse<ProductFilterResponse>> filterProducts( // SỬA Ở ĐÂY: Map<String, Object> -> ProductFilterResponse

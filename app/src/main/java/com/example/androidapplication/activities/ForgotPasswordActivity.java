@@ -24,7 +24,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
-        binding.toolbar.setNavigationOnClickListener(v -> finish());
+        binding.btnBack.setOnClickListener(v -> finish());
         binding.btnSendOtp.setOnClickListener(v -> sendOtp());
     }
 

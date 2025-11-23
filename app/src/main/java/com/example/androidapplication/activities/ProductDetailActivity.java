@@ -26,7 +26,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     private CartViewModel cartViewModel;
     private long productId;
     private int quantity = 1;
-    private ProductDetail currentProduct; // Store current product details
+    private ProductDetail currentProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,14 +34,12 @@ public class ProductDetailActivity extends AppCompatActivity {
         binding = ActivityProductDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        // 1. Xử lý nút Back (Thay vì dùng Toolbar mặc định, ta tự xử lý sự kiện click cho ảnh mũi tên)
+        binding.btnBack.setOnClickListener(v -> finish());
 
         productId = getIntent().getLongExtra("PRODUCT_ID", -1);
         if (productId == -1) {
-            Toast.makeText(this, "Product not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Không tìm thấy sản phẩm", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -65,21 +63,20 @@ public class ProductDetailActivity extends AppCompatActivity {
                 currentProduct = apiResponse.getData();
                 updateUI(currentProduct);
             } else {
-                Toast.makeText(this, "Failed to load product details", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Lỗi tải thông tin sản phẩm", Toast.LENGTH_SHORT).show();
             }
         });
-
-        // We will call the add to cart API in the event listener, so no observer here.
     }
 
     private void setupEventListeners() {
+        // Nút tăng số lượng
         binding.btnIncrease.setOnClickListener(v -> {
-            if (currentProduct != null && quantity < currentProduct.getQuantity()) {
-                quantity++;
-                binding.textQuantity.setText(String.valueOf(quantity));
-            }
+            // Kiểm tra tồn kho nếu cần (currentProduct.getQuantity())
+            quantity++;
+            binding.textQuantity.setText(String.valueOf(quantity));
         });
 
+        // Nút giảm số lượng
         binding.btnDecrease.setOnClickListener(v -> {
             if (quantity > 1) {
                 quantity--;
@@ -87,8 +84,10 @@ public class ProductDetailActivity extends AppCompatActivity {
             }
         });
 
+        // Nút thêm vào giỏ
         binding.addToCartButton.setOnClickListener(v -> addProductToCart());
 
+        // Sự kiện chuyển Tab (Mô tả / Thông số)
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -102,7 +101,9 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void updateUI(ProductDetail product) {
-        binding.collapsingToolbar.setTitle(product.getName());
+        // Không cần set title cho CollapsingToolbar nữa vì ta đã dùng TextView thường
+        // binding.collapsingToolbar.setTitle(product.getName()); -> XÓA
+
         binding.productDetailName.setText(product.getName());
 
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
@@ -110,46 +111,50 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         Glide.with(this)
                 .load(ApiClient.BASE_URL + "resources/images/product/" + product.getImage())
+                .centerInside() // Đổi thành centerInside để thấy toàn bộ ảnh laptop
                 .into(binding.productDetailImage);
 
-        // Set default content for the first tab
+        // Mặc định hiển thị tab đầu tiên
         updateContentForTab(0);
     }
 
     private void updateContentForTab(int position) {
         if (currentProduct == null) return;
 
-        if (position == 0) { // Mô tả chi tiết
-            binding.textContent.setText(Html.fromHtml(currentProduct.getDetailDesc(), Html.FROM_HTML_MODE_LEGACY));
-        } else { // Thông số kỹ thuật
-            // Build the specs string from sample data as requested
-            String specs = "<b>Thông số cơ bản:</b><br>" +
-                    "<b>CPU:</b> Intel Core i5-11400H (6 nhân 12 luồng, tối đa 4.50GHz)<br>" +
-                    "<b>RAM:</b> 8GB DDR4 3200MHz (2 khe, nâng cấp tối đa 32GB)<br>" +
-                    "<b>Ổ cứng:</b> 512GB NVMe PCIe Gen3x4 SSD<br>" +
-                    "<b>Màn hình:</b> 15.6 inch FHD (1920x1080), 144Hz, IPS-Level<br>" +
-                    "<b>Card đồ họa:</b> NVIDIA GeForce RTX 3050 4GB GDDR6<br>" +
-                    "<b>Kết nối:</b> Wi-Fi 6, Bluetooth 5.1, LAN<br>" +
-                    "<b>Hệ điều hành:</b> Windows 11 Home";
-            binding.textContent.setText(Html.fromHtml(specs, Html.FROM_HTML_MODE_LEGACY));
+        if (position == 0) { // Tab Mô tả chi tiết
+            if (currentProduct.getDetailDesc() != null) {
+                binding.textContent.setText(Html.fromHtml(currentProduct.getDetailDesc(), Html.FROM_HTML_MODE_LEGACY));
+            } else {
+                binding.textContent.setText("Đang cập nhật mô tả...");
+            }
+        } else { // Tab Thông số kỹ thuật
+            // Giả lập dữ liệu thông số (hoặc lấy từ field shortDesc nếu bạn muốn)
+            String specs = "<b>Thông số kỹ thuật:</b><br><br>" +
+                    "• <b>CPU:</b> Intel Core i5/i7<br>" +
+                    "• <b>RAM:</b> 8GB/16GB DDR4<br>" +
+                    "• <b>SSD:</b> 512GB NVMe PCIe<br>" +
+                    "• <b>Màn hình:</b> 15.6 inch FHD IPS<br>" +
+                    "• <b>Pin:</b> 3 Cell 50Whr<br>" +
+                    "• <b>Trọng lượng:</b> 2.2 kg";
+
+            // Nếu sản phẩm có shortDesc thì hiển thị, không thì hiện mẫu trên
+            if(currentProduct.getShortDesc() != null && !currentProduct.getShortDesc().isEmpty()){
+                binding.textContent.setText(Html.fromHtml(currentProduct.getShortDesc(), Html.FROM_HTML_MODE_LEGACY));
+            } else {
+                binding.textContent.setText(Html.fromHtml(specs, Html.FROM_HTML_MODE_LEGACY));
+            }
         }
     }
 
     private void addProductToCart() {
-        // Here we use the new API that takes quantity
+        // Gọi API thêm vào giỏ với số lượng
         cartViewModel.addProductToCart(productId, (long) quantity).observe(this, apiResponse -> {
             if (apiResponse != null && apiResponse.getStatus() == 200) {
-                Toast.makeText(this, "Added to cart successfully!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Đã thêm vào giỏ hàng!", Toast.LENGTH_SHORT).show();
             } else {
-                String errorMessage = (apiResponse != null) ? apiResponse.getMessage() : "Failed to add to cart";
+                String errorMessage = (apiResponse != null) ? apiResponse.getMessage() : "Lỗi thêm giỏ hàng";
                 Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
     }
 }

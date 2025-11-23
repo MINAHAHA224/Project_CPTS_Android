@@ -1,7 +1,6 @@
 package com.example.androidapplication.activities;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -21,7 +20,8 @@ public class MomoPaymentActivity extends AppCompatActivity {
         binding = ActivityMomoPaymentBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.toolbar.setNavigationOnClickListener(v -> finish());
+        // --- SỬA Ở ĐÂY: Dùng btnBack thay vì toolbar ---
+        binding.btnBack.setOnClickListener(v -> finish());
 
         String payUrl = getIntent().getStringExtra("PAYMENT_URL");
         if (payUrl == null || payUrl.isEmpty()) {
@@ -29,21 +29,16 @@ public class MomoPaymentActivity extends AppCompatActivity {
             return;
         }
 
-        // --- BẮT ĐẦU PHẦN SỬA LỖI QUAN TRỌNG ---
-
-        // 1. Lấy User-Agent mặc định
-        String defaultUserAgent = binding.webView.getSettings().getUserAgentString();
-        // 2. Tạo một User-Agent giả mạo của trình duyệt Desktop (Chrome trên Windows)
+        // Fake User-Agent để tránh bị Momo chặn trên WebView
         String desktopUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36";
-
-        // 3. Set User-Agent mới cho WebView
         binding.webView.getSettings().setUserAgentString(desktopUserAgent);
 
-        // --- KẾT THÚC PHẦN SỬA LỖI ---
-
         binding.webView.getSettings().setJavaScriptEnabled(true);
-        binding.webView.getSettings().setDomStorageEnabled(true); // Cần thiết cho một số trang thanh toán
-        binding.webView.setWebViewClient(new WebViewClient()); // WebViewClient đơn giản là đủ
+        binding.webView.getSettings().setDomStorageEnabled(true);
+
+        // Xử lý WebViewClient để không mở trình duyệt ngoài
+        binding.webView.setWebViewClient(new WebViewClient());
+
         binding.webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {

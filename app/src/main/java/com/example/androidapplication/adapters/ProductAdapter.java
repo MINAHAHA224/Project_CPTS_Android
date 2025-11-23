@@ -5,18 +5,21 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
+import com.example.androidapplication.R;
 import com.example.androidapplication.activities.ProductDetailActivity;
 import com.example.androidapplication.api.ApiClient;
 import com.example.androidapplication.data.model.product.Product;
-import com.example.androidapplication.databinding.ItemProductBinding;
+
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
+public class ProductAdapter extends BaseAdapter {
 
     private Context context;
     private List<Product> productList;
@@ -27,48 +30,67 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         this.productList = productList;
     }
 
-    @NonNull
     @Override
-    public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemProductBinding binding = ItemProductBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new ProductViewHolder(binding);
+    public int getCount() {
+        return productList != null ? productList.size() : 0;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
+    public Object getItem(int position) {
+        return productList.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return productList.get(position).getId();
+    }
+
+    // Class ViewHolder để tối ưu hiệu năng (Giống RecyclerView nhưng code tay)
+    private class ViewHolder {
+        ImageView imgProduct;
+        TextView txtName, txtPrice;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+
+        // Kiểm tra xem View đã được tái sử dụng chưa
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.item_product, null);
+
+            holder = new ViewHolder();
+            holder.imgProduct = convertView.findViewById(R.id.product_image);
+            holder.txtName = convertView.findViewById(R.id.product_name);
+            holder.txtPrice = convertView.findViewById(R.id.product_price);
+
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+        // Gán dữ liệu
         Product product = productList.get(position);
-        holder.bind(product);
-    }
 
-    @Override
-    public int getItemCount() {
-        return productList.size();
-    }
+        holder.txtName.setText(product.getName());
 
-    class ProductViewHolder extends RecyclerView.ViewHolder {
-        private ItemProductBinding binding;
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        holder.txtPrice.setText(currencyFormat.format(product.getPrice()));
 
-        public ProductViewHolder(ItemProductBinding binding) {
-            super(binding.getRoot());
-            this.binding = binding;
-        }
+        Glide.with(context)
+                .load(BASE_IMAGE_URL + product.getImage())
+                .centerCrop()
+                .placeholder(R.drawable.ic_launcher_foreground) // Ảnh chờ
+                .into(holder.imgProduct);
 
-        void bind(Product product) {
-            binding.productName.setText(product.getName());
+        // Sự kiện click vào item
+        convertView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ProductDetailActivity.class);
+            intent.putExtra("PRODUCT_ID", product.getId());
+            context.startActivity(intent);
+        });
 
-            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-            binding.productPrice.setText(currencyFormat.format(product.getPrice()));
-
-            Glide.with(context)
-                    .load(BASE_IMAGE_URL + product.getImage())
-                    .centerCrop()
-                    .into(binding.productImage);
-
-            itemView.setOnClickListener(v -> {
-                Intent intent = new Intent(context, ProductDetailActivity.class);
-                intent.putExtra("PRODUCT_ID", product.getId());
-                context.startActivity(intent);
-            });
-        }
+        return convertView;
     }
 }

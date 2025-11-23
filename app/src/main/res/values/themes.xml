@@ -1,30 +1,24 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.ComputerShop" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Bảng màu mới -->
-        <item name="colorPrimary">@color/primaryBlue</item>
-        <item name="colorPrimaryVariant">@color/primaryBlueDark</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <item name="colorSecondary">@color/primaryBlue</item>
-        <item name="colorSecondaryVariant">@color/primaryBlueDark</item>
-        <item name="colorOnSecondary">@color/white</item>
+    <style name="Base.Theme.ComputerShop" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
 
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Background color cho toàn bộ app -->
-        <item name="android:windowBackground">@color/activityBackground</item>
+        <!-- Màu sắc chủ đạo (Trỏ vào tên màu mới trong colors.xml) -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <!-- Màu nền mặc định cho toàn app -->
+        <item name="android:windowBackground">@color/app_background</item>
+
+        <!-- Màu chữ mặc định -->
+        <item name="android:textColorPrimary">@color/text_title</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+
+        <!-- Bỏ title bar mặc định (vì mình tự làm custom header) -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="Theme.ComputerShop" parent="Base.Theme.ComputerShop" />
-
-    <!-- Style cho ShapeableImageView -->
-    <style name="Widget.MaterialComponents.ShapeableImageView.ShapeAppearance.LargeComponent" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50%</item>
-    </style>
-
-    <style name="Widget.MaterialComponents.ShapeableImageView.ShapeAppearance.SmallComponent" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">8dp</item>
-    </style>
 </resources>

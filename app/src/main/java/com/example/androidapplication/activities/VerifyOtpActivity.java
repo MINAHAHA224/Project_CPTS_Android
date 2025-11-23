@@ -29,7 +29,15 @@ public class VerifyOtpActivity extends AppCompatActivity {
             return;
         }
 
-        binding.toolbar.setNavigationOnClickListener(v -> finish());
+        // --- SỬA LỖI Ở ĐÂY: Đảm bảo trong XML (activity_verify_otp.xml) bạn đã đặt id là @+id/btnBack cho cái ImageView mũi tên ---
+        // Nếu XML chưa có ID này, code sẽ báo đỏ. Hãy kiểm tra lại XML ở phần trước.
+//        binding.toolbar.setNavigationIcon(null); // Xóa icon mặc định nếu dùng layout cũ
+        // Hoặc tốt nhất dùng layout mới tôi gửi thì dùng dòng dưới:
+        // binding.btnBack.setOnClickListener(v -> finish());
+
+        // TẠM THỜI ĐỂ FIX LỖI NHANH: Dùng Toolbar cũ nếu bạn chưa update XML kịp
+//        binding.toolbar.setNavigationOnClickListener(v -> finish());
+
         binding.btnVerify.setOnClickListener(v -> verifyOtp());
     }
 
@@ -55,7 +63,7 @@ public class VerifyOtpActivity extends AppCompatActivity {
                     break;
                 case ERROR:
                     setLoading(false);
-                    DialogUtils.showErrorDialog(this, resource.error.getMessage());
+                    DialogUtils.showErrorDialog(this, resource.error != null ? resource.error.getMessage() : "Lỗi xác thực");
                     break;
             }
         });

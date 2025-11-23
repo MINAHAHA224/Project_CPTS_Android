@@ -1,105 +1,124 @@
-
 package com.example.androidapplication.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
+import com.example.androidapplication.R;
 import com.example.androidapplication.api.ApiClient;
 import com.example.androidapplication.data.model.cart.CartDetail;
-import com.example.androidapplication.databinding.ItemCartBinding;
+
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
+public class CartAdapter extends BaseAdapter {
 
-    private final Context context;
-    private List<CartDetail> cartDetailList;
+    private Context context;
+    private List<CartDetail> cartList;
     private final String BASE_IMAGE_URL = ApiClient.BASE_URL + "resources/images/product/";
-    private final OnCartItemInteractionListener listener;
+    private OnCartItemListener listener;
 
-    // Interface chuẩn hóa với 3 hành động rõ ràng
-    public interface OnCartItemInteractionListener {
-        void onDeleteItem(long productId);        // Hành động cho nút thùng rác (xóa toàn bộ)
-        void onIncreaseQuantity(long productId); // Hành động cho nút +
-        void onDecreaseQuantity(long productId); // Hành động cho nút -
+    // Interface để gửi sự kiện click ra ngoài Activity
+    public interface OnCartItemListener {
+        void onDelete(long productId);
+        void onIncrease(long productId);
+        void onDecrease(long productId);
     }
 
-    public CartAdapter(Context context, List<CartDetail> cartDetailList, OnCartItemInteractionListener listener) {
+    public CartAdapter(Context context, List<CartDetail> cartList, OnCartItemListener listener) {
         this.context = context;
-        this.cartDetailList = cartDetailList;
+        this.cartList = cartList;
         this.listener = listener;
     }
 
-    public void updateCartItems(List<CartDetail> newCartDetails) {
-        this.cartDetailList.clear();
-        this.cartDetailList.addAll(newCartDetails);
+    // Hàm cập nhật dữ liệu mới
+    public void updateData(List<CartDetail> newList) {
+        this.cartList.clear();
+        this.cartList.addAll(newList);
         notifyDataSetChanged();
     }
 
-    @NonNull
     @Override
-    public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemCartBinding binding = ItemCartBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new CartViewHolder(binding);
+    public int getCount() {
+        return cartList != null ? cartList.size() : 0;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-        holder.bind(cartDetailList.get(position));
+    public Object getItem(int position) {
+        return cartList.get(position);
     }
 
     @Override
-    public int getItemCount() {
-        return cartDetailList.size();
+    public long getItemId(int position) {
+        return position;
     }
 
-    class CartViewHolder extends RecyclerView.ViewHolder {
-        private final ItemCartBinding binding;
+    // ViewHolder pattern cho ListView
+    private class ViewHolder {
+        ImageView imgProduct, btnDelete;
+        TextView txtName, txtPrice, txtQuantity, btnMinus, btnPlus;
+    }
 
-        public CartViewHolder(ItemCartBinding binding) {
-            super(binding.getRoot());
-            this.binding = binding;
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.item_cart, null);
+
+            holder = new ViewHolder();
+            holder.imgProduct = convertView.findViewById(R.id.cart_item_image);
+            holder.btnDelete = convertView.findViewById(R.id.button_delete);
+            holder.txtName = convertView.findViewById(R.id.cart_item_name);
+            holder.txtPrice = convertView.findViewById(R.id.cart_item_price);
+            holder.txtQuantity = convertView.findViewById(R.id.text_quantity);
+            holder.btnMinus = convertView.findViewById(R.id.button_decrease);
+            holder.btnPlus = convertView.findViewById(R.id.button_increase);
+
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        void bind(CartDetail cartDetail) {
-            binding.cartItemName.setText(cartDetail.getProductName());
-            binding.textQuantity.setText(String.valueOf(cartDetail.getQuantity()));
+        // Lấy dữ liệu
+        CartDetail item = cartList.get(position);
 
-            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-            double itemTotalPrice = cartDetail.getPrice() * cartDetail.getQuantity();
-            binding.cartItemPrice.setText(currencyFormat.format(itemTotalPrice));
+        // Gán dữ liệu lên View
+        holder.txtName.setText(item.getProductName());
+        holder.txtQuantity.setText(String.valueOf(item.getQuantity()));
 
-            Glide.with(context)
-                    .load(BASE_IMAGE_URL + cartDetail.getProductImage())
-                    .centerCrop()
-                    .into(binding.cartItemImage);
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        // Tính giá tổng của item (đơn giá * số lượng) hoặc hiển thị đơn giá tùy bạn.
+        // Ở đây hiển thị giá tổng của dòng đó.
+        double lineTotal = item.getPrice() * item.getQuantity();
+        holder.txtPrice.setText(currencyFormat.format(lineTotal));
 
-            // Nút thùng rác -> Luôn gọi hàm xóa toàn bộ
-            binding.buttonDelete.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onDeleteItem(cartDetail.getProductId());
-                }
-            });
+        Glide.with(context)
+                .load(BASE_IMAGE_URL + item.getProductImage())
+                .centerCrop()
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .into(holder.imgProduct);
 
-            // Nút + -> Luôn gọi hàm tăng
-            binding.buttonIncrease.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onIncreaseQuantity(cartDetail.getProductId());
-                }
-            });
+        // Xử lý sự kiện click
+        holder.btnDelete.setOnClickListener(v -> {
+            if(listener != null) listener.onDelete(item.getProductId());
+        });
 
-            // Nút - -> Gọi hàm giảm
-            binding.buttonDecrease.setOnClickListener(v -> {
-                if (listener != null) {
-                    // Dù số lượng là bao nhiêu, vẫn gọi hàm giảm.
-                    // Activity sẽ quyết định gọi API nào (giảm 1 hay xóa)
-                    listener.onDecreaseQuantity(cartDetail.getProductId());
-                }
-            });
-        }
+        holder.btnPlus.setOnClickListener(v -> {
+            if(listener != null) listener.onIncrease(item.getProductId());
+        });
+
+        holder.btnMinus.setOnClickListener(v -> {
+            if(listener != null) listener.onDecrease(item.getProductId());
+        });
+
+        return convertView;
     }
 }

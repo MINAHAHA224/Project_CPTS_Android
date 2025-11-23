@@ -29,10 +29,10 @@ public class ProductRepository {
         return isLoading;
     }
 
-    public LiveData<ApiResponse<List<Product>>> getAllProducts() {
+    public LiveData<ApiResponse<List<Product>>> getAllProducts(String search ) {
         isLoading.setValue(true);
         MutableLiveData<ApiResponse<List<Product>>> data = new MutableLiveData<>();
-        apiService.getAllProducts().enqueue(new Callback<ApiResponse<List<Product>>>() {
+        apiService.getAllProducts(search).enqueue(new Callback<ApiResponse<List<Product>>>() {
             @Override
             public void onResponse(Call<ApiResponse<List<Product>>> call, Response<ApiResponse<List<Product>>> response) {
                 data.setValue(response.body());

@@ -2,21 +2,25 @@ package com.example.androidapplication.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
+import com.example.androidapplication.R;
 import com.example.androidapplication.api.ApiClient;
 import com.example.androidapplication.data.model.order.OrderDetailRpDTO;
-import com.example.androidapplication.databinding.ItemOrderDetailBinding;
+
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.OrderDetailViewHolder> {
+public class OrderDetailAdapter extends BaseAdapter {
 
-    private final Context context;
-    private final List<OrderDetailRpDTO> orderDetailList;
+    private Context context;
+    private List<OrderDetailRpDTO> orderDetailList;
     private final String BASE_IMAGE_URL = ApiClient.BASE_URL + "resources/images/product/";
 
     public OrderDetailAdapter(Context context, List<OrderDetailRpDTO> orderDetailList) {
@@ -24,42 +28,60 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
         this.orderDetailList = orderDetailList;
     }
 
-    @NonNull
     @Override
-    public OrderDetailViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemOrderDetailBinding binding = ItemOrderDetailBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new OrderDetailViewHolder(binding);
+    public int getCount() {
+        return orderDetailList != null ? orderDetailList.size() : 0;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull OrderDetailViewHolder holder, int position) {
-        holder.bind(orderDetailList.get(position));
+    public Object getItem(int position) {
+        return orderDetailList.get(position);
     }
 
     @Override
-    public int getItemCount() {
-        return orderDetailList.size();
+    public long getItemId(int position) {
+        return position;
     }
 
-    class OrderDetailViewHolder extends RecyclerView.ViewHolder {
-        private final ItemOrderDetailBinding binding;
+    private class ViewHolder {
+        ImageView imgProduct;
+        TextView txtName, txtQuantity, txtPrice;
+    }
 
-        public OrderDetailViewHolder(ItemOrderDetailBinding binding) {
-            super(binding.getRoot());
-            this.binding = binding;
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.item_order_detail, null);
+
+            holder = new ViewHolder();
+            holder.imgProduct = convertView.findViewById(R.id.product_image);
+            holder.txtName = convertView.findViewById(R.id.product_name);
+            holder.txtQuantity = convertView.findViewById(R.id.product_quantity);
+            holder.txtPrice = convertView.findViewById(R.id.product_price);
+
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        void bind(OrderDetailRpDTO detail) {
-            binding.productName.setText(detail.getProductName());
-            binding.productQuantity.setText("Số lượng: " + detail.getProductQuantity());
+        OrderDetailRpDTO item = orderDetailList.get(position);
 
-            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-            binding.productPrice.setText(currencyFormat.format(detail.getPrice()));
+        holder.txtName.setText(item.getProductName());
+        holder.txtQuantity.setText("Số lượng: " + item.getProductQuantity());
 
-            Glide.with(context)
-                    .load(BASE_IMAGE_URL + detail.getProductImage())
-                    .centerCrop()
-                    .into(binding.productImage);
-        }
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        holder.txtPrice.setText(currencyFormat.format(item.getPrice()));
+
+        Glide.with(context)
+                .load(BASE_IMAGE_URL + item.getProductImage())
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_error) // Ảnh lỗi nếu không load được
+                .centerCrop()
+                .into(holder.imgProduct);
+
+        return convertView;
     }
 }

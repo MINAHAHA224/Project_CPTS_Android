@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Màu mặc định -->
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- ================= MÀU CHUẨN MỚI (THEO DESIGN SYSTEM) ================= -->
+    <color name="colorPrimary">#1877F2</color>
+    <color name="colorPrimaryDark">#1465C0</color>
+    <color name="colorAccent">#E7F3FF</color>
 
-    <!-- Bảng màu của 3TLap -->
-    <color name="primaryBlue">#0D6EFD</color> <!-- Màu xanh dương chính -->
-    <color name="primaryBlueDark">#0B5ED7</color> <!-- Xanh đậm hơn cho status bar -->
-    <color name="googleRed">#DC4E41</color> <!-- Màu đỏ của nút Google -->
-    <color name="formBackground">#FFFFFF</color> <!-- Màu nền của form -->
-    <color name="textColorPrimary">#212529</color> <!-- Màu chữ chính (đen đậm) -->
-    <color name="textColorSecondary">#6C757D</color> <!-- Màu chữ phụ (xám) -->
-    <color name="dividerColor">#DEE2E6</color> <!-- Màu đường kẻ -->
-    <color name="activityBackground">#F8F9FA</color> <!-- Màu nền chung của các activity -->
+    <color name="app_background">#F2F4F8</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 
-    <!-- *** CÁC MÀU BỊ THIẾU ĐƯỢC BỔ SUNG Ở ĐÂY *** -->
-    <color name="light_gray">#F5F5F5</color>
-    <color name="divider">#BDBDBD</color>
-    <color name="text_primary">#212121</color>
-    <color name="text_secondary">#757575</color>
-    <color name="primary">#007BFF</color>
-    <color name="primary_dark">#0056b3</color>
-    <color name="accent">#00C4FF</color>
+    <color name="text_title">#1C1E21</color>
+    <color name="text_secondary">#65676B</color>
+    <color name="text_price">#FF3D00</color>
+    <color name="text_hint">#9CA3AF</color>
+
+    <color name="divider">#E4E6EB</color>
+    <color name="color_error">#EF4444</color>
+    <color name="color_success">#22C55E</color>
+    <color name="shadow_color">#20000000</color>
+
+    <!-- ================= MAPPING MÀU CŨ (ĐỂ SỬA LỖI CÁC FILE CŨ) ================= -->
+    <!-- Các dòng này giúp code cũ tìm thấy màu mà không bị lỗi -->
+    <color name="primaryBlue">@color/colorPrimary</color>
+    <color name="primaryBlueDark">@color/colorPrimaryDark</color>
+    <color name="textColorPrimary">@color/text_title</color>
+    <color name="text_primary">@color/text_title</color> <!-- Sửa lỗi dialog -->
+    <color name="textColorSecondary">@color/text_secondary</color>
+    <color name="activityBackground">@color/app_background</color>
+    <color name="formBackground">@color/white</color>
 </resources>

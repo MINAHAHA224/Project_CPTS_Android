@@ -3,10 +3,8 @@ package com.example.androidapplication.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.example.androidapplication.data.model.auth.ResetPasswordDTO;
 import com.example.androidapplication.databinding.ActivityResetPasswordBinding;
 import com.example.androidapplication.utils.DialogUtils;
@@ -26,6 +24,13 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         userEmail = getIntent().getStringExtra("USER_EMAIL");
+
+        // --- SỬA LỖI Ở ĐÂY ---
+        // XÓA dòng binding.toolbar... đi
+
+        // THAY BẰNG DÒNG NÀY:
+//        binding.btnBack.setOnClickListener(v -> finish());
+        // --------------------
 
         binding.btnResetPassword.setOnClickListener(v -> resetPassword());
     }
@@ -64,7 +69,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
                     break;
                 case ERROR:
                     setLoading(false);
-                    DialogUtils.showErrorDialog(this, resource.error.getMessage());
+                    DialogUtils.showErrorDialog(this, resource.error != null ? resource.error.getMessage() : "Lỗi đặt lại mật khẩu");
                     break;
             }
         });

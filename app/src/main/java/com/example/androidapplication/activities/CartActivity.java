@@ -1,24 +1,23 @@
-
-
-
 package com.example.androidapplication.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ListView; // Import ListView
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.example.androidapplication.adapters.CartAdapter;
 import com.example.androidapplication.data.model.cart.Cart;
 import com.example.androidapplication.databinding.ActivityCartBinding;
 import com.example.androidapplication.viewmodel.CartViewModel;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class CartActivity extends AppCompatActivity implements CartAdapter.OnCartItemInteractionListener {
+public class CartActivity extends AppCompatActivity implements CartAdapter.OnCartItemListener {
 
     private ActivityCartBinding binding;
     private CartViewModel cartViewModel;
@@ -31,20 +30,27 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
         binding = ActivityCartBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Setup Toolbar
         setSupportActionBar(binding.toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(false); // Ẩn title mặc định để dùng title custom
         }
+        binding.toolbar.setNavigationOnClickListener(v -> finish());
 
         cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
 
-        setupRecyclerView();
+        setupListView();
         observeViewModel();
 
         binding.buttonCheckout.setOnClickListener(v -> {
-            Intent intent = new Intent(CartActivity.this, CheckoutActivity.class);
-            intent.putExtra("TOTAL_PRICE", currentTotalPrice);
-            startActivity(intent);
+            if (currentTotalPrice > 0) {
+                Intent intent = new Intent(CartActivity.this, CheckoutActivity.class);
+                intent.putExtra("TOTAL_PRICE", currentTotalPrice);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Giỏ hàng trống!", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -54,101 +60,142 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
         fetchCart();
     }
 
-    private void setupRecyclerView() {
+    private void setupListView() {
+        // Khởi tạo Adapter rỗng ban đầu
         cartAdapter = new CartAdapter(this, new ArrayList<>(), this);
-        binding.recyclerViewCart.setLayoutManager(new LinearLayoutManager(this));
-        binding.recyclerViewCart.setAdapter(cartAdapter);
+        // Gán adapter cho ListView (Chú ý ID trong XML là list_view_cart)
+        binding.listViewCart.setAdapter(cartAdapter);
     }
 
-    private void observeViewModel() {
-        cartViewModel.getIsLoading().observe(this, isLoading -> {
-            if (!isChangingConfigurations()) {
-                binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
-            }
-        });
+//    private void observeViewModel() {
+//        cartViewModel.getIsLoading().observe(this, isLoading -> {
+//            binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+//        });
+//
+//        cartViewModel.getCart().observe(this, apiResponse -> {
+//            if (apiResponse != null && apiResponse.getData() != null) {
+//                updateCartUI(apiResponse.getData());
+//            } else {
+//                updateCartUI(null);
+//            }
+//        });
+//    }
+private void observeViewModel() {
+    cartViewModel.getIsLoading().observe(this, isLoading -> {
+        binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+    });
 
-        cartViewModel.getCart().observe(this, apiResponse -> {
-            if (apiResponse != null && apiResponse.getData() != null) {
-                updateCartUI(apiResponse.getData());
-            } else {
-                Toast.makeText(this, "Failed to load cart", Toast.LENGTH_SHORT).show();
-                updateCartUI(null);
-            }
-        });
-    }
+    // --- SỬA ĐOẠN NÀY ---
+    // Lắng nghe biến cartData cố định trong ViewModel
+    cartViewModel.getCartLiveData().observe(this, apiResponse -> {
+        if (apiResponse != null && apiResponse.getData() != null) {
+            updateCartUI(apiResponse.getData());
+        } else {
+            updateCartUI(null);
+        }
+    });
+}
 
     private void updateCartUI(Cart cart) {
         if (cart == null || cart.getCartDetails() == null || cart.getCartDetails().isEmpty()) {
             binding.emptyCartView.setVisibility(View.VISIBLE);
             binding.checkoutLayout.setVisibility(View.GONE);
-            binding.recyclerViewCart.setVisibility(View.GONE);
+            binding.listViewCart.setVisibility(View.GONE);
             this.currentTotalPrice = 0.0;
-            // Nếu adapter đã tồn tại, hãy xóa dữ liệu của nó
-            if (cartAdapter != null) {
-                cartAdapter.updateCartItems(new ArrayList<>());
-            }
+
+            // Xóa dữ liệu adapter
+            cartAdapter.updateData(new ArrayList<>());
         } else {
             binding.emptyCartView.setVisibility(View.GONE);
             binding.checkoutLayout.setVisibility(View.VISIBLE);
-            binding.recyclerViewCart.setVisibility(View.VISIBLE);
+            binding.listViewCart.setVisibility(View.VISIBLE);
 
-            // --- ĐÂY LÀ SỰ THAY ĐỔI QUAN TRỌNG NHẤT ---
-            // THAY VÌ TẠO MỚI, HÃY GỌI HÀM CẬP NHẬT CỦA ADAPTER HIỆN CÓ
-            cartAdapter.updateCartItems(cart.getCartDetails());
-            // --- KẾT THÚC THAY ĐỔI ---
+            // Cập nhật dữ liệu cho Adapter
+            cartAdapter.updateData(cart.getCartDetails());
 
-            // Cập nhật lại tổng tiền vào biến của Activity
+            // Cập nhật tổng tiền
             this.currentTotalPrice = cart.getTotalPrice();
-
             NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
             binding.totalPriceValue.setText(currencyFormat.format(this.currentTotalPrice));
         }
     }
 
-    private void fetchCart() {
-        cartViewModel.getCart();
-    }
+//    private void fetchCart() {
+//        cartViewModel.getCart();
+//    }
+private void fetchCart() {
+    // Gọi hàm loadCart() để ViewModel kích hoạt API và bắn dữ liệu về LiveData ở trên
+    cartViewModel.loadCart();
+}
+
+    // --- IMPLEMENT CÁC HÀM TỪ INTERFACE ADAPTER ---
+
+//    @Override
+//    public void onDelete(long productId) {
+//        cartViewModel.deleteProductFromCart(productId).observe(this, response -> {
+//            if (response != null && response.getStatus() == 200) {
+//                Toast.makeText(this, "Đã xóa sản phẩm", Toast.LENGTH_SHORT).show();
+//                fetchCart(); // Load lại giỏ hàng
+//            } else {
+//                Toast.makeText(this, "Lỗi xóa sản phẩm", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+//
+//    @Override
+//    public void onIncrease(long productId) {
+//        // Gọi API thêm (logic thêm 1 giống API thêm mới)
+//        cartViewModel.addProductToCart(productId).observe(this, response -> {
+//            if (response != null && response.getStatus() == 200) {
+//                fetchCart();
+//            }
+//        });
+//    }
+//
+//    @Override
+//    public void onDecrease(long productId) {
+//        // Gọi API giảm 1
+//        cartViewModel.deleteOneProductFromCart(productId).observe(this, response -> {
+//            if (response != null && response.getStatus() == 200) {
+//                fetchCart();
+//            }
+//        });
+//    }
+@Override
+public void onDelete(long productId) {
+    binding.progressBar.setVisibility(View.VISIBLE);
+    cartViewModel.deleteProductFromCart(productId).observe(this, response -> {
+        if (response != null && response.getStatus() == 200) {
+            // Xóa thành công -> Gọi fetchCart() -> ViewModel load lại -> UI tự update
+            fetchCart();
+            Toast.makeText(this, "Đã xóa sản phẩm", Toast.LENGTH_SHORT).show();
+        } else {
+            binding.progressBar.setVisibility(View.GONE); // Tắt loading nếu lỗi
+            Toast.makeText(this, "Lỗi xóa sản phẩm", Toast.LENGTH_SHORT).show();
+        }
+    });
+}
 
     @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
-
-    // --- CÁC HÀM XỬ LÝ SỰ KIỆN TỪ ADAPTER ---
-
-    @Override
-    public void onDeleteItem(long productId) {
-        // ViewModel sẽ gọi API xóa toàn bộ (deleteProductFromCart)
-        cartViewModel.deleteProductFromCart(productId).observe(this, response -> {
-            if (response != null && response.getStatus() == 200) {
-                Toast.makeText(this, "Đã xóa sản phẩm", Toast.LENGTH_SHORT).show();
-                fetchCart(); // QUAN TRỌNG: Tải lại giỏ hàng
-            } else {
-                Toast.makeText(this, "Lỗi khi xóa sản phẩm", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    @Override
-    public void onIncreaseQuantity(long productId) {
+    public void onIncrease(long productId) {
+        binding.progressBar.setVisibility(View.VISIBLE);
         cartViewModel.addProductToCart(productId).observe(this, response -> {
             if (response != null && response.getStatus() == 200) {
-                fetchCart(); // QUAN TRỌNG: Tải lại giỏ hàng
+                fetchCart();
             } else {
-                Toast.makeText(this, "Lỗi khi tăng số lượng", Toast.LENGTH_SHORT).show();
+                binding.progressBar.setVisibility(View.GONE);
             }
         });
     }
 
     @Override
-    public void onDecreaseQuantity(long productId) {
-        // ViewModel sẽ gọi API giảm 1 (deleteOneProductFromCart)
+    public void onDecrease(long productId) {
+        binding.progressBar.setVisibility(View.VISIBLE);
         cartViewModel.deleteOneProductFromCart(productId).observe(this, response -> {
             if (response != null && response.getStatus() == 200) {
-                fetchCart(); // QUAN TRỌNG: Tải lại giỏ hàng
+                fetchCart();
             } else {
-                Toast.makeText(this, "Lỗi khi giảm số lượng", Toast.LENGTH_SHORT).show();
+                binding.progressBar.setVisibility(View.GONE);
             }
         });
     }

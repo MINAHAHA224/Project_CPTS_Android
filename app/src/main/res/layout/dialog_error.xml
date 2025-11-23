@@ -4,44 +4,50 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="24dp"
-    android:background="@drawable/dialog_background"
+    android:background="@drawable/bg_white_rounded"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="24dp">
 
+    <!-- Icon Lỗi -->
     <ImageView
         android:id="@+id/icon_status"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:src="@drawable/ic_error"
-        app:tint="@android:color/holo_red_light" />
+        app:tint="@color/color_error" />
 
+    <!-- Tiêu đề -->
     <TextView
         android:id="@+id/text_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Oops! Something went wrong"
-        android:textAppearance="?attr/textAppearanceHeadline6"
-        android:textColor="@color/text_primary" />
+        android:text="Đã xảy ra lỗi"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_title" />
 
+    <!-- Nội dung -->
     <TextView
         android:id="@+id/text_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:lineSpacingExtra="4dp"
-        android:text="An unknown error has occurred. Please try again later."
-        android:textAppearance="?attr/textAppearanceBody2"
+        android:text="Thông báo lỗi hiển thị ở đây"
+        android:textSize="15sp"
         android:textColor="@color/text_secondary" />
 
-    <com.google.android.material.button.MaterialButton
+    <!-- Nút OK -->
+    <Button
         android:id="@+id/button_ok"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:padding="12dp"
-        android:text="OK" />
+        android:text="Đóng"
+        android:background="@drawable/bg_button_primary"
+        android:textColor="@color/white"
+        android:textStyle="bold"/>
 
 </LinearLayout>

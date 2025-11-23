@@ -5,10 +5,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView; // Nhớ Import ListView
 import android.widget.Toast;
 import com.example.androidapplication.adapters.OrderHistoryAdapter;
 import com.example.androidapplication.databinding.FragmentOrdersBinding;
@@ -34,18 +34,15 @@ public class OrdersFragment extends Fragment {
 
         orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
 
-        setupRecyclerView();
+        // SỬA LỖI Ở ĐÂY: Không dùng LayoutManager nữa
+        orderHistoryAdapter = new OrderHistoryAdapter(getContext(), new ArrayList<>());
+        binding.listViewOrders.setAdapter(orderHistoryAdapter); // Gán vào ListView
+
         observeViewModel();
 
         binding.swipeRefreshLayout.setOnRefreshListener(this::fetchOrderHistory);
 
         fetchOrderHistory();
-    }
-
-    private void setupRecyclerView() {
-        orderHistoryAdapter = new OrderHistoryAdapter(getContext(), new ArrayList<>());
-        binding.recyclerViewOrders.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.recyclerViewOrders.setAdapter(orderHistoryAdapter);
     }
 
     private void observeViewModel() {
@@ -55,14 +52,12 @@ public class OrdersFragment extends Fragment {
 
         orderViewModel.getOrderHistory().observe(getViewLifecycleOwner(), apiResponse -> {
             if (apiResponse != null && apiResponse.getData() != null) {
-                if (apiResponse.getData().isEmpty()) {
-                    // Show empty view if needed
-                } else {
-                    orderHistoryAdapter = new OrderHistoryAdapter(getContext(), apiResponse.getData());
-                    binding.recyclerViewOrders.setAdapter(orderHistoryAdapter);
-                }
+                // Vì Adapter BaseAdapter không có hàm updateList tự viết, ta tạo mới adapter gán vào
+                // Hoặc bạn có thể viết thêm hàm updateData trong OrderHistoryAdapter giống CartAdapter
+                orderHistoryAdapter = new OrderHistoryAdapter(getContext(), apiResponse.getData());
+                binding.listViewOrders.setAdapter(orderHistoryAdapter);
             } else {
-                Toast.makeText(getContext(), "Failed to load order history", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Lỗi tải lịch sử đơn hàng", Toast.LENGTH_SHORT).show();
             }
         });
     }

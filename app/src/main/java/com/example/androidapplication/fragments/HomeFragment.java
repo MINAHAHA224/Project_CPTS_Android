@@ -11,24 +11,26 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.androidapplication.R;
 import com.example.androidapplication.activities.CartActivity;
+import com.example.androidapplication.activities.MainActivity;
 import com.example.androidapplication.adapters.ProductAdapter;
+import com.example.androidapplication.data.model.product.Product; // Đảm bảo import đúng Model
 import com.example.androidapplication.databinding.FragmentHomeBinding;
+import com.example.androidapplication.utils.ExpandableHeightGridView;
 import com.example.androidapplication.viewmodel.ProductViewModel;
 
 import java.util.ArrayList;
-
+import java.util.List;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     private ProductViewModel productViewModel;
-    private ProductAdapter featuredProductAdapter;
-    private ProductAdapter newProductAdapter;
+    private ProductAdapter productAdapter; // Dùng Adapter mới (BaseAdapter)
+    private List<Product> productList;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -43,48 +45,39 @@ public class HomeFragment extends Fragment {
 
         productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
 
-        setupRecyclerViews();
+        // Khởi tạo list và adapter
+        productList = new ArrayList<>();
+        productAdapter = new ProductAdapter(getContext(), productList);
+
+        // Cấu hình GridView
+        binding.gvNewProducts.setExpanded(true); // Bật chế độ mở rộng chiều cao
+        binding.gvNewProducts.setAdapter(productAdapter);
+
         observeViewModel();
         setupEventListeners();
 
-        // Load data initially
+        // Load dữ liệu
         fetchHomePageData();
     }
 
-    private void setupRecyclerViews() {
-        // Adapter for Featured Products (Horizontal)
-        featuredProductAdapter = new ProductAdapter(getContext(), new ArrayList<>());
-        binding.featuredProductsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        binding.featuredProductsRecyclerView.setAdapter(featuredProductAdapter);
-
-        // Adapter for New Products (Grid)
-        newProductAdapter = new ProductAdapter(getContext(), new ArrayList<>());
-        binding.newProductsRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        binding.newProductsRecyclerView.setAdapter(newProductAdapter);
-    }
-
     private void observeViewModel() {
-        // Observe loading state
+        // Loading
         productViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
             binding.swipeRefreshLayout.setRefreshing(isLoading);
         });
 
-        // Observe home page data
+        // Dữ liệu trang chủ
         productViewModel.getHomePageData().observe(getViewLifecycleOwner(), apiResponse -> {
             if (apiResponse != null && apiResponse.getData() != null) {
-                // Update Featured Products
-                if (apiResponse.getData().get("featuredProducts") != null) {
-                    featuredProductAdapter = new ProductAdapter(getContext(), apiResponse.getData().get("featuredProducts"));
-                    binding.featuredProductsRecyclerView.setAdapter(featuredProductAdapter);
-                }
-
-                // Update New Products
+                productList.clear();
+                // Lấy danh sách sản phẩm mới từ API
                 if (apiResponse.getData().get("newProducts") != null) {
-                    newProductAdapter = new ProductAdapter(getContext(), apiResponse.getData().get("newProducts"));
-                    binding.newProductsRecyclerView.setAdapter(newProductAdapter);
+                    productList.addAll(apiResponse.getData().get("newProducts"));
                 }
+                // Thông báo adapter cập nhật lại giao diện
+                productAdapter.notifyDataSetChanged();
             } else {
-                Toast.makeText(getContext(), "Failed to load products", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Không thể tải dữ liệu", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -93,19 +86,30 @@ public class HomeFragment extends Fragment {
         // Swipe to refresh
         binding.swipeRefreshLayout.setOnRefreshListener(this::fetchHomePageData);
 
-        // Cart button click
+        // Click giỏ hàng
         binding.actionCart.setOnClickListener(v -> {
             startActivity(new Intent(getActivity(), CartActivity.class));
         });
 
-        // Search button click (chúng ta sẽ làm chức năng này sau)
+        // Click tìm kiếm
         binding.actionSearch.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Search functionality will be added soon!", Toast.LENGTH_SHORT).show();
+            // Lấy MainActivity hiện tại
+            if (getActivity() instanceof MainActivity) {
+                MainActivity mainActivity = (MainActivity) getActivity();
+
+                // Tìm thanh Bottom Navigation
+                BottomNavigationView bottomNav = mainActivity.findViewById(R.id.bottom_nav_view);
+
+                // Chuyển tab sang tab "Sản phẩm" (ID này phải khớp với menu bottom_nav_menu.xml)
+                if (bottomNav != null) {
+                    bottomNav.setSelectedItemId(R.id.navigation_products);
+                }
+            }
         });
 
-        // Tải ảnh banner (bạn có thể thay bằng ảnh động hoặc lấy từ API sau này)
+        // Banner giả (sau này thay bằng link thật)
         Glide.with(this)
-                .load("https://lh3.googleusercontent.com/pw/AP1GczNw2z03jT1YqYvC6F-y621nZ2_F2D4Qd1_rQ7QYh8Q2Yc2b3e8s2n8zB8Z5J8M4K8xV3E4p3t3o1zRj8Q1jP6V1X1T3j4n6d0=w1920-h1080") // Thay URL ảnh banner của bạn vào đây
+                .load("https://tse1.mm.bing.net/th/id/OIP.ulCA3Ao9gj2sC3lcz7vRgQHaEK?rs=1&pid=ImgDetMain&o=7&rm=3")
                 .into(binding.imageBanner);
     }
 

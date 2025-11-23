@@ -113,9 +113,19 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void signInWithGoogle() {
+//        setLoading(true);
+//        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+//        googleSignInLauncher.launch(signInIntent);
         setLoading(true);
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        googleSignInLauncher.launch(signInIntent);
+
+        // --- SỬA ĐOẠN NÀY ---
+        // Gọi lệnh signOut trước để xóa trạng thái đăng nhập cũ trên thiết bị
+        mGoogleSignInClient.signOut().addOnCompleteListener(this, task -> {
+            // Sau khi sign out xong, mới mở Intent đăng nhập
+            // Lúc này Google sẽ coi như chưa ai đăng nhập và hiện bảng chọn tài khoản
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+            googleSignInLauncher.launch(signInIntent);
+        });
     }
 
     private void handleGoogleSignInResult(Task<GoogleSignInAccount> completedTask) {

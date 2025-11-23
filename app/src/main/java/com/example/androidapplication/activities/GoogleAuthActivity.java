@@ -32,8 +32,7 @@ public class GoogleAuthActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         // Nút back trên toolbar để đóng activity
-        binding.toolbar.setNavigationOnClickListener(v -> finish());
-
+        binding.btnBack.setOnClickListener(v -> finish());
         // Cấu hình WebView
         binding.webView.getSettings().setJavaScriptEnabled(true);
         binding.webView.setWebViewClient(new MyWebViewClient());

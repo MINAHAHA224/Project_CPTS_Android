@@ -1,4 +1,3 @@
-
 package com.example.androidapplication.activities;
 
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.androidapplication.data.model.Status; // THÊM IMPORT NÀY
 import com.example.androidapplication.data.model.order.InfoOrderRqDTO;
 import com.example.androidapplication.databinding.ActivityCheckoutBinding;
 import com.example.androidapplication.utils.DialogUtils;
@@ -32,55 +30,58 @@ public class CheckoutActivity extends AppCompatActivity {
         binding = ActivityCheckoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        // --- SỬA LỖI CRASH TẠI ĐÂY ---
+        // 1. Xóa setSupportActionBar vì ta dùng Custom Header
+        // 2. Xử lý nút Back thủ công
+        binding.btnBack.setOnClickListener(v -> finish());
 
+        // Lấy dữ liệu từ Intent
         totalPriceFromCart = getIntent().getDoubleExtra("TOTAL_PRICE", 0.0);
-        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-        binding.totalPriceValue.setText("Total: " + currencyFormat.format(totalPriceFromCart));
 
+        // Format tiền tệ
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        binding.totalPriceValue.setText(currencyFormat.format(totalPriceFromCart));
+
+        // Init ViewModel
         orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         observeViewModel();
+
+        // Gọi API lấy thông tin user để điền sẵn vào form
         userViewModel.getUserProfile();
 
         binding.buttonPlaceOrder.setOnClickListener(v -> placeOrder());
     }
 
     private void observeViewModel() {
-        // --- BẮT ĐẦU PHẦN SỬA LỖI ---
+        // Loading cho User ViewModel
         userViewModel.getIsLoading().observe(this, isLoading -> {
-            // Chỉ hiển thị loading chung cho cả màn hình
-            binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+            // Chỉ hiện loading nếu chưa có dữ liệu
+            if(isLoading && binding.nameEditText.getText().toString().isEmpty()) {
+                binding.progressBar.setVisibility(View.VISIBLE);
+            } else {
+                binding.progressBar.setVisibility(View.GONE);
+            }
         });
 
-        // SỬA LẠI OBSERVER NÀY ĐỂ XỬ LÝ ĐỐI TƯỢNG RESOURCE
+        // Lấy thông tin User điền vào Form
         userViewModel.getUserProfile().observe(this, resource -> {
             switch (resource.status) {
-                case LOADING:
-                    binding.progressBar.setVisibility(View.VISIBLE);
-                    break;
                 case SUCCESS:
-                    binding.progressBar.setVisibility(View.GONE);
-                    // KIỂM TRA DỮ LIỆU BÊN TRONG RESOURCE
                     if (resource.data != null && resource.data.getData() != null) {
-                        // TRUY CẬP ĐÚNG: resource.data.getData()
                         binding.nameEditText.setText(resource.data.getData().getFullName());
                         binding.phoneEditText.setText(resource.data.getData().getPhone());
                         binding.addressEditText.setText(resource.data.getData().getAddress());
                     }
                     break;
                 case ERROR:
-                    binding.progressBar.setVisibility(View.GONE);
-                    Toast.makeText(this, "Lỗi khi tải thông tin người dùng: " + resource.error.getMessage(), Toast.LENGTH_SHORT).show();
+                    // Không cần báo lỗi, người dùng có thể tự nhập
                     break;
             }
         });
-        // --- KẾT THÚC PHẦN SỬA LỖI ---
 
+        // Loading cho Order ViewModel (Khi bấm đặt hàng)
         orderViewModel.getIsLoading().observe(this, isLoading -> {
             binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
             binding.buttonPlaceOrder.setEnabled(!isLoading);
@@ -93,7 +94,7 @@ public class CheckoutActivity extends AppCompatActivity {
         String address = binding.addressEditText.getText().toString().trim();
 
         if (name.isEmpty() || phone.isEmpty() || address.isEmpty()) {
-            Toast.makeText(this, "Please fill all shipping information", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Vui lòng điền đầy đủ thông tin giao hàng", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -106,7 +107,6 @@ public class CheckoutActivity extends AppCompatActivity {
         orderInfo.setPaymentMethod(paymentMethod);
         orderInfo.setTotalPriceToSaveOrder(this.totalPriceFromCart);
 
-        // Luồng này vẫn giữ nguyên vì chúng ta chưa sửa OrderViewModel
         orderViewModel.placeOrder(orderInfo).observe(this, apiResponse -> {
             if (apiResponse != null && apiResponse.getStatus() == 200 && apiResponse.getData() != null) {
                 String method = apiResponse.getData().get("typePayment");
@@ -114,33 +114,26 @@ public class CheckoutActivity extends AppCompatActivity {
                 if ("MOMO".equalsIgnoreCase(method)) {
                     String paymentUrl = apiResponse.getData().get("paymentUrl");
                     if (paymentUrl != null && !paymentUrl.isEmpty()) {
-//                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(paymentUrl));
-//                        startActivity(browserIntent);
                         Intent momoIntent = new Intent(CheckoutActivity.this, MomoPaymentActivity.class);
                         momoIntent.putExtra("PAYMENT_URL", paymentUrl);
                         startActivity(momoIntent);
                         finish();
                     } else {
-                        DialogUtils.showErrorDialog(this, "Không nhận được link thanh toán Momo.");
+                        DialogUtils.showErrorDialog(this, "Lỗi: Không lấy được link thanh toán Momo.");
                     }
                 } else {
-                    Toast.makeText(this, apiResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(CheckoutActivity.this, MainActivity.class);
+                    // COD Thành công -> Chuyển sang màn hình OrderSuccessActivity
+                    Intent intent = new Intent(CheckoutActivity.this, OrderSuccessActivity.class);
+                    // Cờ này để khi bấm back ở màn hình Success sẽ không quay lại Checkout
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();
                 }
 
             } else {
-                String errorMessage = (apiResponse != null) ? apiResponse.getMessage() : "Failed to place order";
+                String errorMessage = (apiResponse != null) ? apiResponse.getMessage() : "Đặt hàng thất bại";
                 DialogUtils.showErrorDialog(this, errorMessage);
             }
         });
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
     }
 }

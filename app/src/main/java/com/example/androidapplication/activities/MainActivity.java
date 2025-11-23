@@ -21,12 +21,25 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Load the default fragment
-        if (savedInstanceState == null) {
+        // --- THÊM ĐOẠN NÀY ---
+        // Kiểm tra xem có yêu cầu chuyển tab không (Từ OrderSuccessActivity gửi sang)
+        String navigateTo = getIntent().getStringExtra("NAVIGATE_TO");
+        if ("ORDERS".equals(navigateTo)) {
+            // Load Fragment Orders
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.nav_host_fragment, new HomeFragment())
+                    .replace(R.id.nav_host_fragment, new com.example.androidapplication.fragments.OrdersFragment())
                     .commit();
+            // Update trạng thái BottomNav
+            binding.bottomNavView.setSelectedItemId(R.id.navigation_orders);
+        } else {
+            // Mặc định load Home
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment, new com.example.androidapplication.fragments.HomeFragment())
+                        .commit();
+            }
         }
+        // ---------------------
 
         binding.bottomNavView.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;

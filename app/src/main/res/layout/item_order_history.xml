@@ -1,116 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginBottom="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    android:orientation="vertical"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
 
     <LinearLayout
+        android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="@drawable/bg_white_rounded"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <!-- Phần Header luôn hiển thị -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/header_layout"
+        <!-- Dòng 1: ID và Ngày -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:padding="16dp">
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/order_id"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceTitleMedium"
-                android:textColor="@color/textColorPrimary"
+                android:text="Đơn hàng #123"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Order #26" />
+                android:textColor="@color/text_title"/>
 
             <TextView
                 android:id="@+id/order_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textAppearance="?attr/textAppearanceBodySmall"
-                android:textColor="@color/textColorSecondary"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/order_id"
-                tools:text="16/11/2025 15:49" />
+                android:text="12/12/2023"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"/>
+        </LinearLayout>
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/order_status"
-                android:layout_width="wrap_content"
+        <!-- Dòng 2: Trạng thái -->
+        <TextView
+            android:id="@+id/order_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Đang giao hàng"
+            android:textColor="@color/colorPrimary"
+            android:background="@drawable/bg_quantity_btn"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:textSize="12sp"/>
+
+        <!-- Dòng 3: Tổng tiền -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:clickable="false"
-                app:layout_constraintEnd_toStartOf="@id/expand_arrow"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="PENDING" />
+                android:text="Tổng tiền:"
+                android:textColor="@color/text_secondary"/>
 
             <TextView
                 android:id="@+id/order_total_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textAppearance="?attr/textAppearanceTitleMedium"
-                android:textColor="@color/primaryBlue"
+                android:text="15.000.000 đ"
+                android:textColor="@color/text_price"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="@id/order_status"
-                app:layout_constraintTop_toBottomOf="@id/order_status"
-                tools:text="21.399.001 đ" />
+                android:textSize="16sp"/>
+        </LinearLayout>
 
-            <ImageView
-                android:id="@+id/expand_arrow"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_expand_more"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <!-- Phần chi tiết (Expandable) - Chỗ này trong ListView hơi khó làm Expandable animation mượt -->
+        <!-- Giải pháp đơn giản cho đồ án: Khi bấm vào item thì mở Activity chi tiết đơn hàng riêng, hoặc dùng Nested ListView (không khuyến khích) -->
+        <!-- Ở đây ta sẽ hiển thị nút "Xem chi tiết" -->
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/expand_arrow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:text="Bấm để xem chi tiết ▼"
+            android:textSize="12sp"
+            android:textColor="@color/text_hint"/>
 
-        <!-- Phần chi tiết, ban đầu sẽ bị ẩn -->
+        <!-- ListView con chứa chi tiết sản phẩm (Ẩn/Hiện) -->
+        <!-- Lưu ý: ListView lồng trong ListView là tối kỵ. Nên dùng LinearLayout add view động bằng code Java nếu muốn hiển thị list con -->
         <LinearLayout
             android:id="@+id/details_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="gone"
-            tools:visibility="visible">
-
-            <com.google.android.material.divider.MaterialDivider
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingTop="12dp"
-                android:text="Chi tiết sản phẩm"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:textStyle="bold" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/products_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="2"
-                tools:listitem="@layout/item_order_detail" />
-
+            android:layout_marginTop="8dp">
+            <!-- Code Java sẽ add view con vào đây -->
         </LinearLayout>
-    </LinearLayout>
 
-</com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+</LinearLayout>

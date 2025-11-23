@@ -35,6 +35,11 @@
         <activity android:name=".activities.ResetPasswordActivity" />
         <activity android:name=".activities.ForgotPasswordActivity" />
         <activity android:name=".activities.MomoPaymentActivity" />
+        <activity android:name=".activities.UpdateInfoActivity" />
+        <activity android:name=".activities.ChangePasswordActivity" />
+        <activity android:name=".activities.ContactUsActivity" />
+        <activity android:name=".activities.AboutUsActivity" />
+        <activity android:name=".activities.OrderSuccessActivity" />
 
         <!-- Trong AndroidManifest.xml, bên trong thẻ <application> -->
         <activity android:name=".activities.GoogleAuthActivity" />

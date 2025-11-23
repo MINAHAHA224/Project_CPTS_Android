@@ -2,73 +2,97 @@ package com.example.androidapplication.utils;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.androidapplication.R;
-import com.example.androidapplication.databinding.DialogErrorBinding;
-import com.example.androidapplication.databinding.DialogSuccessBinding;
 
 public class DialogUtils {
 
-    public static void showErrorDialog(Context context, String message) {
-        // Sử dụng ViewBinding cho dialog
-        DialogErrorBinding binding = DialogErrorBinding.inflate(LayoutInflater.from(context));
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setView(binding.getRoot());
-
-        // Tạo dialog và làm cho nó không thể bị hủy bằng cách nhấn ra ngoài
-        final AlertDialog dialog = builder.create();
-        dialog.setCancelable(false);
-        dialog.setCanceledOnTouchOutside(false);
-
-        // Set nội dung lỗi
-        binding.textMessage.setText(message);
-
-        // Set sự kiện cho nút OK
-        binding.buttonOk.setOnClickListener(v -> dialog.dismiss());
-
-        // Đặt background của dialog thành trong suốt để chỉ thấy layout custom
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        }
-
-        dialog.show();
-    }
-
-    // Thêm interface để xử lý sự kiện khi dialog được đóng
+    // Interface callback
     public interface OnDialogDismissListener {
         void onDismiss();
     }
 
-    // Bổ sung hàm showSuccessDialog
-    public static void showSuccessDialog(Context context, String title, String message, OnDialogDismissListener listener) {
-        DialogSuccessBinding binding = DialogSuccessBinding.inflate(LayoutInflater.from(context)); // Cần tạo layout dialog_success.xml
+    public static void showErrorDialog(Context context, String message) {
+        showErrorDialog(context, "Lỗi", message, null);
+    }
+
+    public static void showErrorDialog(Context context, String title, String message, OnDialogDismissListener listener) {
+        // Dùng LayoutInflater thường để tránh lỗi Binding nếu chưa Rebuild
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_error, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setView(binding.getRoot());
+        builder.setView(view);
 
         final AlertDialog dialog = builder.create();
+
+        // QUAN TRỌNG: Làm trong suốt nền mặc định của Android để thấy bo góc của mình
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+
         dialog.setCancelable(false);
-        dialog.setCanceledOnTouchOutside(false);
 
-        binding.textTitle.setText(title);
-        binding.textMessage.setText(message);
+        // Ánh xạ
+        TextView txtTitle = view.findViewById(R.id.text_title);
+        TextView txtMessage = view.findViewById(R.id.text_message);
+        Button btnOk = view.findViewById(R.id.button_ok);
 
-        binding.buttonOk.setOnClickListener(v -> {
+        // Gán dữ liệu
+        txtTitle.setText(title != null ? title : "Thông báo");
+        txtMessage.setText(message);
+
+        btnOk.setOnClickListener(v -> {
             dialog.dismiss();
             if (listener != null) {
-                listener.onDismiss(); // Gọi callback khi người dùng nhấn OK
+                listener.onDismiss();
             }
         });
 
+        try {
+            dialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void showSuccessDialog(Context context, String title, String message, OnDialogDismissListener listener) {
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_success, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setView(view);
+
+        final AlertDialog dialog = builder.create();
+
         if (dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
 
-        dialog.show();
+        dialog.setCancelable(false);
+
+        TextView txtTitle = view.findViewById(R.id.text_title);
+        TextView txtMessage = view.findViewById(R.id.text_message);
+        Button btnOk = view.findViewById(R.id.button_ok);
+
+        txtTitle.setText(title);
+        txtMessage.setText(message);
+
+        btnOk.setOnClickListener(v -> {
+            dialog.dismiss();
+            if (listener != null) {
+                listener.onDismiss();
+            }
+        });
+
+        try {
+            dialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

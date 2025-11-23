@@ -1,171 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/activityBackground"
-    tools:context=".fragments.HomeFragment">
+    android:background="@color/app_background"
+    android:orientation="vertical">
 
-    <!-- Thanh Toolbar ở trên cùng -->
-    <com.google.android.material.appbar.AppBarLayout
+    <!-- 1. HEADER (Thanh tìm kiếm + Giỏ hàng) -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        app:elevation="2dp">
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:contentInsetStart="0dp">
+        <!-- Ô tìm kiếm giả -->
+        <LinearLayout
+            android:id="@+id/action_search"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_search_bar"
+            android:gravity="center_vertical"
+            android:paddingStart="12dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_search"
+                android:tint="@color/text_secondary"/>
 
-                <TextView
-                    android:id="@+id/toolbar_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="3TLap"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                    android:textColor="@color/primaryBlue"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Tìm kiếm laptop..."
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"/>
+        </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/action_search"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:padding="12dp"
-                    android:src="@drawable/ic_search"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/action_cart"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/textColorSecondary" />
+        <!-- Icon Giỏ hàng -->
+        <ImageView
+            android:id="@+id/action_cart"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="12dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_cart"
+            android:tint="@color/colorPrimary"/>
+    </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/action_cart"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:padding="12dp"
-                    android:src="@drawable/ic_cart"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/textColorSecondary" />
+    <!-- Đường kẻ mờ -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider"/>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.appbar.MaterialToolbar>
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <!-- Nội dung chính có thể cuộn -->
+    <!-- 2. NỘI DUNG CHÍNH (Có thể cuộn) -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="match_parent">
 
-        <androidx.core.widget.NestedScrollView
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingBottom="16dp">
+            android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="20dp">
 
-                <!-- 1. Banner Header -->
-                <com.google.android.material.card.MaterialCardView
+                <!-- Banner quảng cáo -->
+                <ImageView
+                    android:id="@+id/image_banner"
                     android:layout_width="match_parent"
                     android:layout_height="180dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp">
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_launcher_background"/>
 
-                    <ImageView
-                        android:id="@+id/image_banner"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        tools:src="@tools:sample/backgrounds/scenic"
-                        android:contentDescription="Banner" />
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- 2. Các mục dịch vụ (Tạm thời ẩn đi để làm sau) -->
-                <!-- Bạn có thể bỏ comment phần này nếu muốn hiện -->
-                <!--
+                <!-- Tiêu đề mục Sản phẩm mới -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingStart="12dp"
-                    android:paddingEnd="12dp"
-                    android:layout_marginTop="16dp">
-                    ... layout cho 4 services ...
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <View
+                        android:layout_width="4dp"
+                        android:layout_height="20dp"
+                        android:background="@color/colorPrimary"
+                        android:layout_marginEnd="8dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hàng Mới Về"
+                        android:textColor="@color/text_title"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
                 </LinearLayout>
-                -->
 
-                <!-- 3. Sản Phẩm Nổi Bật -->
-                <TextView
-                    style="@style/TextAppearance.Material3.TitleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
-                    android:text="Sản Phẩm Nổi Bật"
-                    android:textColor="@color/textColorPrimary" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/featuredProductsRecyclerView"
+                <!-- DANH SÁCH SẢN PHẨM (GRIDVIEW) -->
+                <!-- Sử dụng Custom GridView để không bị lỗi cuộn -->
+                <com.example.androidapplication.utils.ExpandableHeightGridView
+                    android:id="@+id/gvNewProducts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:clipToPadding="false"
-                    android:orientation="horizontal"
+                    android:numColumns="2"
+                    android:horizontalSpacing="0dp"
+                    android:verticalSpacing="0dp"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_product" />
-
-                <!-- 4. Sản Phẩm Mới -->
-                <TextView
-                    style="@style/TextAppearance.Material3.TitleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
-                    android:text="Hàng Mới Về"
-                    android:textColor="@color/textColorPrimary" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/newProductsRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:nestedScrollingEnabled="false"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:spanCount="2"
-                    tools:itemCount="4"
-                    tools:listitem="@layout/item_product" />
+                    android:stretchMode="columnWidth"/>
 
             </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+        </ScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</LinearLayout>
