@@ -22,6 +22,9 @@ public class UserViewModel extends AndroidViewModel {
 
     public LiveData<Boolean> getIsLoading() { return userRepository.getIsLoading(); }
 
+    public LiveData<Resource<ApiResponse<Object>>> updateFaceData(String embeddingString) {
+        return userRepository.updateFaceData(embeddingString);
+    }
     public LiveData<Resource<ApiResponse<UserProfileUpdateDTO>>> getUserProfile() {
         return userRepository.getUserProfile();
     }

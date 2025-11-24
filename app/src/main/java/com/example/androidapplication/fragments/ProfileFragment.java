@@ -31,7 +31,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 // ... các import khác ...
 
 public class ProfileFragment extends Fragment {
-
+    private TextView btnRegisterFace;
     private UserViewModel userViewModel;
 
     private ImageView imgAvatar;
@@ -61,6 +61,7 @@ public class ProfileFragment extends Fragment {
         txtName = view.findViewById(R.id.profile_name);
         txtEmail = view.findViewById(R.id.profile_email);
         progressBar = view.findViewById(R.id.progress_bar);
+        btnRegisterFace = view.findViewById(R.id.btn_register_face);
 
         // --- ÁNH XẠ LẠI (Không cần ép kiểu (Button) nữa) ---
         btnEditProfile = view.findViewById(R.id.btn_edit_profile);
@@ -91,6 +92,10 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
+        btnRegisterFace.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), com.example.androidapplication.activities.FaceRegisterActivity.class));
+        });
+
         // -- Lịch sử đơn hàng (Chuyển Tab trên MainActivity) --
         btnOrderHistory.setOnClickListener(v -> {
             if (getActivity() instanceof MainActivity) {
@@ -102,6 +107,8 @@ public class ProfileFragment extends Fragment {
                 }
             }
         });
+
+
 
         // -- Đăng xuất --
         btnLogout.setOnClickListener(v -> {

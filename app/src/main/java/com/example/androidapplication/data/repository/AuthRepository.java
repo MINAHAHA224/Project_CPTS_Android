@@ -12,6 +12,7 @@ import com.example.androidapplication.data.model.Resource;
 import com.example.androidapplication.data.model.auth.LoginDTO;
 import com.example.androidapplication.data.model.auth.RegisterDTO;
 import com.example.androidapplication.data.model.auth.ResetPasswordDTO;
+import com.example.androidapplication.data.model.user.FaceDataRequest;
 import com.example.androidapplication.data.model.user.InformationDTO;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -322,6 +323,35 @@ public class AuthRepository {
                 ErrorResponse networkError = new ErrorResponse();
                 networkError.setMessage("Network error. Please check your connection.");
                 result.setValue(Resource.error(networkError, null));
+            }
+        });
+        return result;
+    }
+
+
+
+    public LiveData<Resource<ApiResponse<InformationDTO>>> loginByFaceId(String embeddingString) {
+        MutableLiveData<Resource<ApiResponse<InformationDTO>>> result = new MutableLiveData<>();
+        result.setValue(Resource.loading(null));
+
+        FaceDataRequest request = new FaceDataRequest(embeddingString);
+        apiService.loginByFaceId(request).enqueue(new Callback<ApiResponse<InformationDTO>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<InformationDTO>> call, Response<ApiResponse<InformationDTO>> response) {
+                if (response.isSuccessful()) {
+                    result.setValue(Resource.success(response.body()));
+                } else {
+                    // Xử lý lỗi từ backend trả về (ví dụ: Face not match)
+                    ErrorResponse error = new ErrorResponse();
+                    error.setMessage("Khuôn mặt không khớp hoặc chưa đăng ký.");
+                    result.setValue(Resource.error(error, null));
+                }
+            }
+            @Override
+            public void onFailure(Call<ApiResponse<InformationDTO>> call, Throwable t) {
+                ErrorResponse error = new ErrorResponse();
+                error.setMessage(t.getMessage());
+                result.setValue(Resource.error(error, null));
             }
         });
         return result;

@@ -77,6 +77,20 @@
                 android:gravity="center_vertical"
                 android:layout_marginBottom="12dp"/>
 
+            <TextView
+                android:id="@+id/btn_register_face"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_white_rounded"
+                android:drawableStart="@drawable/ic_face_recognition"
+                android:drawablePadding="16dp"
+                android:padding="16dp"
+                android:text="Thiết lập FaceID"
+                android:textColor="@color/text_title"
+                android:textSize="16sp"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp"/>
+
             <!-- Mục: Đổi mật khẩu -->
             <TextView
                 android:id="@+id/btn_change_password"

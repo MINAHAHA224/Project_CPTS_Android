@@ -36,6 +36,15 @@ public interface ApiService {
     @POST("/api/v1/auth/reset-password")
     Call<ApiResponse<Object>> resetPassword(@Body ResetPasswordDTO resetPasswordDTO);
 
+
+    // Auth Controller - Đăng nhập bằng khuôn mặt
+    @POST("/api/v1/auth/face-login")
+    Call<ApiResponse<InformationDTO>> loginByFaceId(@Body FaceDataRequest request);
+
+    // User Controller - Cập nhật dữ liệu khuôn mặt (Đăng ký FaceID)
+    @POST("/api/v1/users/face-data")
+    Call<ApiResponse<Object>> updateFaceData(@Body FaceDataRequest request);
+
     // Product Controller
     @GET("/api/v1/products/home") // THÊM PHƯƠNG THỨC NÀY
     Call<ApiResponse<Map<String, List<Product>>>> getHomePageData();

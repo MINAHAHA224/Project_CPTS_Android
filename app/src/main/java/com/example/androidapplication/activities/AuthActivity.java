@@ -52,6 +52,10 @@ public class AuthActivity extends AppCompatActivity {
         });
 
         binding.loginButton.setOnClickListener(v -> loginUser());
+        // face id
+        binding.faceLoginButton.setOnClickListener(v -> {
+            startActivity(new Intent(AuthActivity.this, com.example.androidapplication.activities.FaceLoginActivity.class));
+        });
         binding.googleLoginButton.setOnClickListener(v -> signInWithGoogle());
         // THÊM ĐOẠN NÀY
         binding.forgotPasswordText.setOnClickListener(v -> {

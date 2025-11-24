@@ -38,5 +38,5 @@ public class Order {
 
     // --- THÊM PHẦN NÀY ---
     @Expose(serialize = false, deserialize = false) // Báo cho Gson bỏ qua trường này khi parse JSON
-    private boolean isExpanded = false;
+    private boolean     isExpanded = false;
 }

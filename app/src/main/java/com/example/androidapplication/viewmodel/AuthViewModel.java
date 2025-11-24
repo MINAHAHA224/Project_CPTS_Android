@@ -21,6 +21,10 @@ public class AuthViewModel extends AndroidViewModel {
         authRepository = new AuthRepository(application);
     }
 
+
+    public LiveData<Resource<ApiResponse<InformationDTO>>> loginByFaceId(String embeddingString) {
+        return authRepository.loginByFaceId(embeddingString);
+    }
     public LiveData<Resource<ApiResponse<InformationDTO>>> login(String email, String password) {
         return authRepository.login(email, password);
     }

@@ -10,6 +10,7 @@ import com.example.androidapplication.data.model.ApiResponse;
 import com.example.androidapplication.data.model.ErrorResponse;
 import com.example.androidapplication.data.model.Resource;
 import com.example.androidapplication.data.model.user.ChangePasswordDTO;
+import com.example.androidapplication.data.model.user.FaceDataRequest;
 import com.example.androidapplication.data.model.user.UserProfileUpdateDTO;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -148,6 +149,33 @@ public class UserRepository {
             public void onFailure(Call<ApiResponse<Object>> call, Throwable t) {
                 result.setValue(Resource.error(getNetworkError(t), null));
                 isLoading.setValue(false);
+            }
+        });
+        return result;
+    }
+
+
+    public LiveData<Resource<ApiResponse<Object>>> updateFaceData(String embeddingString) {
+        MutableLiveData<Resource<ApiResponse<Object>>> result = new MutableLiveData<>();
+        result.setValue(Resource.loading(null));
+
+        FaceDataRequest request = new FaceDataRequest(embeddingString);
+        apiService.updateFaceData(request).enqueue(new Callback<ApiResponse<Object>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<Object>> call, Response<ApiResponse<Object>> response) {
+                if (response.isSuccessful()) {
+                    result.setValue(Resource.success(response.body()));
+                } else {
+                    ErrorResponse error = new ErrorResponse();
+                    error.setMessage("Lỗi cập nhật FaceID.");
+                    result.setValue(Resource.error(error, null));
+                }
+            }
+            @Override
+            public void onFailure(Call<ApiResponse<Object>> call, Throwable t) {
+                ErrorResponse error = new ErrorResponse();
+                error.setMessage(t.getMessage());
+                result.setValue(Resource.error(error, null));
             }
         });
         return result;

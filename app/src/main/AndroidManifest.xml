@@ -2,7 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <!-- Camera + Audio -->
+    <uses-permission android:name="android.permission.CAMERA" />
+<!--    <uses-permission android:name="android.permission.RECORD_AUDIO" />-->
+
+    <!-- Internet (nếu gửi video hoặc gọi API) -->
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Lưu file video -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28"/>
 
     <application
             android:allowBackup="true"
@@ -40,6 +54,8 @@
         <activity android:name=".activities.ContactUsActivity" />
         <activity android:name=".activities.AboutUsActivity" />
         <activity android:name=".activities.OrderSuccessActivity" />
+        <activity android:name=".activities.FaceRegisterActivity" />
+        <activity android:name=".activities.FaceLoginActivity" />
 
         <!-- Trong AndroidManifest.xml, bên trong thẻ <application> -->
         <activity android:name=".activities.GoogleAuthActivity" />
