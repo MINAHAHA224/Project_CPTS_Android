@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_white_rounded"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="BỘ LỌC TÌM KIẾM"
+            android:textColor="@color/text_title"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- 1. Sắp xếp -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sắp xếp theo giá"
+            android:textStyle="bold"
+            android:textColor="@color/text_title"/>
+
+        <RadioGroup
+            android:id="@+id/rgSort"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/rbSortAsc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Giá tăng dần"/>
+
+            <RadioButton
+                android:id="@+id/rbSortDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Giá giảm dần"/>
+        </RadioGroup>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- 2. Khoảng giá -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Khoảng giá"
+            android:textStyle="bold"
+            android:textColor="@color/text_title"/>
+
+        <RadioGroup
+            android:id="@+id/rgPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/rbPriceAll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Tất cả"/>
+
+            <RadioButton
+                android:id="@+id/rbPriceLow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:tag="duoi-10-trieu"
+                android:text="Dưới 10 triệu"/>
+
+            <RadioButton
+                android:id="@+id/rbPriceMid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:tag="10-20-trieu"
+                android:text="10 - 20 triệu"/>
+
+            <RadioButton
+                android:id="@+id/rbPriceHigh"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:tag="tren-20-trieu"
+                android:text="Trên 20 triệu"/>
+        </RadioGroup>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- 3. Hãng sản xuất (Checkbox) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hãng sản xuất"
+            android:textStyle="bold"
+            android:textColor="@color/text_title"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <CheckBox android:id="@+id/cbDell" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Dell"/>
+            <CheckBox android:id="@+id/cbAsus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Asus"/>
+            <CheckBox android:id="@+id/cbMsi" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="MSI"/>
+            <CheckBox android:id="@+id/cbHp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="HP"/>
+            <CheckBox android:id="@+id/cbLenovo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Lenovo"/>
+            <CheckBox android:id="@+id/cbAcer" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Acer"/>
+        </LinearLayout>
+
+        <!-- Nút áp dụng -->
+        <Button
+            android:id="@+id/btnApplyFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_button_primary"
+            android:text="ÁP DỤNG"
+            android:textColor="@color/white"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+</ScrollView>

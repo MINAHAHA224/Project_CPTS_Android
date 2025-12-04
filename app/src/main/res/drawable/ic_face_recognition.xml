@@ -1,0 +1,56 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <!-- 4 góc bo -->
+    <path
+        android:strokeWidth="3"
+        android:strokeColor="#000000"
+        android:fillColor="@android:color/transparent"
+        android:pathData="
+            M12,6 H18
+            M30,6 H36
+            C39.3,6 42,8.7 42,12 V18
+
+            M42,30 V36
+            C42,39.3 39.3,42 36,42 H30
+
+            M18,42 H12
+            C8.7,42 6,39.3 6,36 V30
+
+            M6,18 V12
+            C6,8.7 8.7,6 12,6
+        " />
+
+    <!-- Mắt trái (nét dọc) -->
+    <path
+        android:strokeWidth="3"
+        android:strokeColor="#000000"
+        android:strokeLineCap="round"
+        android:pathData="M19,20 v4" />
+
+    <!-- Mắt phải (nét dọc) -->
+    <path
+        android:strokeWidth="3"
+        android:strokeColor="#000000"
+        android:strokeLineCap="round"
+        android:pathData="M29,20 v4" />
+
+    <!-- Mũi (nét dọc hơi cong giống iOS) -->
+    <path
+        android:strokeWidth="3"
+        android:strokeColor="#000000"
+        android:strokeLineCap="round"
+        android:pathData="M24,23 v3" />
+
+    <!-- Miệng -->
+    <path
+        android:strokeWidth="3"
+        android:strokeColor="#000000"
+        android:fillColor="@android:color/transparent"
+        android:strokeLineCap="round"
+        android:pathData="M18,30
+            C21,34 27,34 30,30" />
+</vector>
