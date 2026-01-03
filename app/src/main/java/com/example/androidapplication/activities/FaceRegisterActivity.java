@@ -303,6 +303,7 @@ import com.example.androidapplication.R;
 import com.example.androidapplication.data.model.Status;
 import com.example.androidapplication.utils.DialogUtils;
 import com.example.androidapplication.utils.FaceNetHelper;
+import com.example.androidapplication.utils.ToastHandler;
 import com.example.androidapplication.viewmodel.AuthViewModel;
 import com.example.androidapplication.viewmodel.UserViewModel;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -369,7 +370,7 @@ public class FaceRegisterActivity extends AppCompatActivity {
             if (currentFrameBitmap != null && currentFace != null) {
                 processFaceRegistration(currentFrameBitmap, currentFace);
             } else {
-                Toast.makeText(this, "Chưa nhận diện được khuôn mặt. Hãy nhìn thẳng vào camera.", Toast.LENGTH_SHORT).show();
+                ToastHandler.showToast(this, "Chưa nhận diện được khuôn mặt. Hãy nhìn thẳng vào camera.", Toast.LENGTH_SHORT);
             }
         });
 
@@ -394,7 +395,7 @@ public class FaceRegisterActivity extends AppCompatActivity {
             if (allPermissionsGranted()) {
                 startCamera();
             } else {
-                Toast.makeText(this, "Bạn cần cấp quyền Camera để sử dụng FaceID", Toast.LENGTH_SHORT).show();
+                ToastHandler.showToast(this, "Bạn cần cấp quyền Camera để sử dụng FaceID", Toast.LENGTH_SHORT);
                 finish();
             }
         }
@@ -496,7 +497,7 @@ public class FaceRegisterActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, "Lỗi xử lý ảnh: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            ToastHandler.showToast(this, "Lỗi xử lý ảnh: " + e.getMessage(), Toast.LENGTH_SHORT);
         }
     }
 

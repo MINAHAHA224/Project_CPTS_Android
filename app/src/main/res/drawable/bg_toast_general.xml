@@ -1,0 +1,16 @@
+<!-- File: res/drawable/bg_toast_vibrant.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Dải màu gradient cực kỳ nổi bật và hiện đại -->
+    <gradient
+        android:angle="45"
+        android:startColor="#6A11CB"
+        android:centerColor="#FC5C7D"
+        android:endColor="#FFB347"
+        android:type="linear" />
+
+    <!-- Bo góc lớn cho cảm giác thân thiện -->
+    <corners android:radius="30dp" />
+
+</shape>

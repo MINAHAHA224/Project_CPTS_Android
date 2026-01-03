@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.example.androidapplication.api.ApiClient;
 import com.example.androidapplication.data.model.product.ProductDetail;
 import com.example.androidapplication.databinding.ActivityProductDetailBinding;
+import com.example.androidapplication.utils.ToastHandler;
 import com.example.androidapplication.viewmodel.CartViewModel;
 import com.example.androidapplication.viewmodel.ProductViewModel;
 import com.google.android.material.tabs.TabLayout;
@@ -39,7 +40,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         productId = getIntent().getLongExtra("PRODUCT_ID", -1);
         if (productId == -1) {
-            Toast.makeText(this, "Không tìm thấy sản phẩm", Toast.LENGTH_SHORT).show();
+            ToastHandler.showToast(this, "Không tìm thấy sản phẩm", Toast.LENGTH_SHORT);
             finish();
             return;
         }
@@ -63,7 +64,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                 currentProduct = apiResponse.getData();
                 updateUI(currentProduct);
             } else {
-                Toast.makeText(this, "Lỗi tải thông tin sản phẩm", Toast.LENGTH_SHORT).show();
+                ToastHandler.showToast(this, "Lỗi tải thông tin sản phẩm", Toast.LENGTH_SHORT);
             }
         });
     }
@@ -150,10 +151,10 @@ public class ProductDetailActivity extends AppCompatActivity {
         // Gọi API thêm vào giỏ với số lượng
         cartViewModel.addProductToCart(productId, (long) quantity).observe(this, apiResponse -> {
             if (apiResponse != null && apiResponse.getStatus() == 200) {
-                Toast.makeText(this, "Đã thêm vào giỏ hàng!", Toast.LENGTH_SHORT).show();
+                ToastHandler.showToast(this, "Đã thêm vào giỏ hàng!", Toast.LENGTH_SHORT);
             } else {
                 String errorMessage = (apiResponse != null) ? apiResponse.getMessage() : "Lỗi thêm giỏ hàng";
-                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
+                ToastHandler.showToast(this, errorMessage, Toast.LENGTH_SHORT);
             }
         });
     }

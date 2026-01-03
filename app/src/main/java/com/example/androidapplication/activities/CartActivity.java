@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.androidapplication.adapters.CartAdapter;
 import com.example.androidapplication.data.model.cart.Cart;
 import com.example.androidapplication.databinding.ActivityCartBinding;
+import com.example.androidapplication.utils.ToastHandler;
 import com.example.androidapplication.viewmodel.CartViewModel;
 
 import java.text.NumberFormat;
@@ -49,7 +50,7 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
                 intent.putExtra("TOTAL_PRICE", currentTotalPrice);
                 startActivity(intent);
             } else {
-                Toast.makeText(this, "Giỏ hàng trống!", Toast.LENGTH_SHORT).show();
+                ToastHandler.showToast(this, "Giỏ hàng trống!", Toast.LENGTH_SHORT);
             }
         });
     }
@@ -134,10 +135,10 @@ private void fetchCart() {
 //    public void onDelete(long productId) {
 //        cartViewModel.deleteProductFromCart(productId).observe(this, response -> {
 //            if (response != null && response.getStatus() == 200) {
-//                Toast.makeText(this, "Đã xóa sản phẩm", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Đã xóa sản phẩm", Toast.LENGTH_SHORT);
 //                fetchCart(); // Load lại giỏ hàng
 //            } else {
-//                Toast.makeText(this, "Lỗi xóa sản phẩm", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Lỗi xóa sản phẩm", Toast.LENGTH_SHORT);
 //            }
 //        });
 //    }
@@ -168,10 +169,11 @@ public void onDelete(long productId) {
         if (response != null && response.getStatus() == 200) {
             // Xóa thành công -> Gọi fetchCart() -> ViewModel load lại -> UI tự update
             fetchCart();
-            Toast.makeText(this, "Đã xóa sản phẩm", Toast.LENGTH_SHORT).show();
+            ToastHandler.showToast(this, "Đã xóa sản phẩm", Toast.LENGTH_SHORT);
+//            Toast.makeText(this, "Đã xóa sản phẩm", Toast.LENGTH_SHORT);
         } else {
             binding.progressBar.setVisibility(View.GONE); // Tắt loading nếu lỗi
-            Toast.makeText(this, "Lỗi xóa sản phẩm", Toast.LENGTH_SHORT).show();
+            ToastHandler.showToast(this, "Lỗi xóa sản phẩm", Toast.LENGTH_SHORT);
         }
     });
 }

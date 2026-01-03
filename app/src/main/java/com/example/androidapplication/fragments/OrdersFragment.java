@@ -12,6 +12,7 @@ import android.widget.ListView; // Nhớ Import ListView
 import android.widget.Toast;
 import com.example.androidapplication.adapters.OrderHistoryAdapter;
 import com.example.androidapplication.databinding.FragmentOrdersBinding;
+import com.example.androidapplication.utils.ToastHandler;
 import com.example.androidapplication.viewmodel.OrderViewModel;
 import java.util.ArrayList;
 
@@ -57,7 +58,7 @@ public class OrdersFragment extends Fragment {
                 orderHistoryAdapter = new OrderHistoryAdapter(getContext(), apiResponse.getData());
                 binding.listViewOrders.setAdapter(orderHistoryAdapter);
             } else {
-                Toast.makeText(getContext(), "Lỗi tải lịch sử đơn hàng", Toast.LENGTH_SHORT).show();
+                ToastHandler.showToast(getContext(), "Lỗi tải lịch sử đơn hàng", Toast.LENGTH_SHORT);
             }
         });
     }

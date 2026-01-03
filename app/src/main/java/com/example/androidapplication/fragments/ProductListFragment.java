@@ -23,6 +23,7 @@ import com.example.androidapplication.adapters.ProductAdapter;
 import com.example.androidapplication.data.model.product.Product;
 import com.example.androidapplication.data.model.product.ProductFilterResponse;
 import com.example.androidapplication.databinding.FragmentProductListBinding;
+import com.example.androidapplication.utils.ToastHandler;
 import com.example.androidapplication.viewmodel.ProductViewModel;
 
 import java.util.ArrayList;
@@ -87,7 +88,7 @@ public class ProductListFragment extends Fragment {
 //                mProductList.addAll(apiResponse.getData());
 //                productAdapter.notifyDataSetChanged(); // Cập nhật UI GridView
 //            } else {
-//                Toast.makeText(getContext(), "Không tải được dữ liệu", Toast.LENGTH_SHORT).show();
+//                ToastHandler.showToast(getContext(), "Không tải được dữ liệu", Toast.LENGTH_SHORT);
 //            }
 //        });
 //    }
@@ -106,10 +107,10 @@ public class ProductListFragment extends Fragment {
                 productAdapter.notifyDataSetChanged();
 
                 if (mProductList.isEmpty()) {
-                    Toast.makeText(getContext(), "Không tìm thấy sản phẩm nào", Toast.LENGTH_SHORT).show();
+                    ToastHandler.showToast(getContext(), "Không tìm thấy sản phẩm nào", Toast.LENGTH_SHORT);
                 }
             } else {
-                Toast.makeText(getContext(), "Lỗi tải dữ liệu", Toast.LENGTH_SHORT).show();
+                ToastHandler.showToast(getContext(), "Lỗi tải dữ liệu", Toast.LENGTH_SHORT);
             }
         });
     }
@@ -185,14 +186,14 @@ public class ProductListFragment extends Fragment {
                     mProductList.clear(); // Xóa list cũ
                     mProductList.addAll(response.getProducts()); // Thêm list mới
                     productAdapter.notifyDataSetChanged(); // Báo Adapter vẽ lại
-                    Toast.makeText(getContext(), "Tìm thấy " + mProductList.size() + " sản phẩm", Toast.LENGTH_SHORT).show();
+                    ToastHandler.showToast(getContext(), "Tìm thấy " + mProductList.size() + " sản phẩm", Toast.LENGTH_SHORT);
                 } else {
                     mProductList.clear();
                     productAdapter.notifyDataSetChanged();
-                    Toast.makeText(getContext(), "Không tìm thấy sản phẩm phù hợp", Toast.LENGTH_SHORT).show();
+                    ToastHandler.showToast(getContext(), "Không tìm thấy sản phẩm phù hợp", Toast.LENGTH_SHORT);
                 }
             } else {
-                Toast.makeText(getContext(), "Lỗi khi lọc sản phẩm", Toast.LENGTH_SHORT).show();
+                ToastHandler.showToast(getContext(), "Lỗi khi lọc sản phẩm", Toast.LENGTH_SHORT);
             }
         });
     }

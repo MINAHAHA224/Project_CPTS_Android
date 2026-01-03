@@ -8,7 +8,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
     // IP máy ảo mặc định là 10.0.2.2, nếu chạy máy thật thì đổi thành IP LAN (ví dụ 192.168.1.x)
-    public static final String BASE_URL = "http://10.0.2.2:8080/";
+//    public static final String BASE_URL = "http://10.0.2.2:8080/";
+    public static final String BASE_URL = "http://192.168.1.178:8080/";
     private static Retrofit retrofit = null;
 
     public static Retrofit getClient(Context context) {

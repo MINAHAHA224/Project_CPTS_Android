@@ -14,6 +14,7 @@ import com.example.androidapplication.R;
 import com.example.androidapplication.data.model.Status;
 import com.example.androidapplication.data.model.user.ChangePasswordDTO;
 import com.example.androidapplication.utils.DialogUtils; // Dùng lại tiện ích Dialog có sẵn của bạn
+import com.example.androidapplication.utils.ToastHandler;
 import com.example.androidapplication.viewmodel.UserViewModel;
 
 public class ChangePasswordActivity extends AppCompatActivity {
@@ -52,17 +53,17 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         // Validate cơ bản (giống logic cũ của bạn)
         if (currentPass.isEmpty() || newPass.isEmpty() || confirmPass.isEmpty()) {
-            Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+            ToastHandler.showToast(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT);
             return;
         }
 
         if (newPass.length() < 6) {
-            Toast.makeText(this, "Mật khẩu mới phải có ít nhất 6 ký tự", Toast.LENGTH_SHORT).show();
+            ToastHandler.showToast(this, "Mật khẩu mới phải có ít nhất 6 ký tự", Toast.LENGTH_SHORT);
             return;
         }
 
         if (!newPass.equals(confirmPass)) {
-            Toast.makeText(this, "Mật khẩu xác nhận không khớp", Toast.LENGTH_SHORT).show();
+            ToastHandler.showToast(this, "Mật khẩu xác nhận không khớp", Toast.LENGTH_SHORT);
             return;
         }
 

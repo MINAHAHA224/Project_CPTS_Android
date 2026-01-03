@@ -20,6 +20,7 @@ import com.example.androidapplication.adapters.ProductAdapter;
 import com.example.androidapplication.data.model.product.Product; // Đảm bảo import đúng Model
 import com.example.androidapplication.databinding.FragmentHomeBinding;
 import com.example.androidapplication.utils.ExpandableHeightGridView;
+import com.example.androidapplication.utils.ToastHandler;
 import com.example.androidapplication.viewmodel.ProductViewModel;
 
 import java.util.ArrayList;
@@ -77,7 +78,7 @@ public class HomeFragment extends Fragment {
                 // Thông báo adapter cập nhật lại giao diện
                 productAdapter.notifyDataSetChanged();
             } else {
-                Toast.makeText(getContext(), "Không thể tải dữ liệu", Toast.LENGTH_SHORT).show();
+                ToastHandler.showToast(getContext(), "Không thể tải dữ liệu", Toast.LENGTH_SHORT);
             }
         });
     }

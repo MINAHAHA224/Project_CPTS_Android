@@ -14,6 +14,7 @@ import com.example.androidapplication.R;
 import com.example.androidapplication.data.model.Status;
 import com.example.androidapplication.data.model.user.UserProfileUpdateDTO;
 import com.example.androidapplication.utils.DialogUtils;
+import com.example.androidapplication.utils.ToastHandler;
 import com.example.androidapplication.viewmodel.UserViewModel;
 
 public class UpdateInfoActivity extends AppCompatActivity {
@@ -55,10 +56,10 @@ public class UpdateInfoActivity extends AppCompatActivity {
 
             userViewModel.updateUserProfile(dto).observe(this, resource -> {
                 if (resource.status == Status.SUCCESS) {
-                    Toast.makeText(this, "Cập nhật thành công!", Toast.LENGTH_SHORT).show();
+                    ToastHandler.showToast(this, "Cập nhật thành công!", Toast.LENGTH_SHORT);
                     finish(); // Đóng activity
                 } else if (resource.status == Status.ERROR) {
-                    Toast.makeText(this, "Lỗi: " + resource.error.getMessage(), Toast.LENGTH_SHORT).show();
+                    ToastHandler.showToast(this, "Lỗi: " + resource.error.getMessage(), Toast.LENGTH_SHORT);
                 }
             });
         });

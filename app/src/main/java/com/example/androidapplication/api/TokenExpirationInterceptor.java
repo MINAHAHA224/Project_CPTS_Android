@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 
 import com.example.androidapplication.activities.AuthActivity;
 import com.example.androidapplication.utils.SharedPrefManager;
+import com.example.androidapplication.utils.ToastHandler;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 
@@ -44,7 +46,9 @@ public class TokenExpirationInterceptor implements Interceptor {
                 SharedPrefManager.getInstance(context).clear();
 
                 // 2. Thông báo nhẹ cho người dùng
-                Toast.makeText(context, "Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại!", Toast.LENGTH_LONG).show();
+//                Snackbar.make(context, "Giỏ hàng trống!", Snackbar.LENGTH_SHORT).show();
+
+                ToastHandler.showToast(context, "Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại!", Toast.LENGTH_LONG);
 
                 // 3. Chuyển ngay lập tức về màn hình Login
                 Intent intent = new Intent(context, AuthActivity.class);

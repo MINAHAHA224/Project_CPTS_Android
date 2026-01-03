@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.androidapplication.data.model.order.InfoOrderRqDTO;
 import com.example.androidapplication.databinding.ActivityCheckoutBinding;
 import com.example.androidapplication.utils.DialogUtils;
+import com.example.androidapplication.utils.ToastHandler;
 import com.example.androidapplication.viewmodel.OrderViewModel;
 import com.example.androidapplication.viewmodel.UserViewModel;
 
@@ -94,7 +95,7 @@ public class CheckoutActivity extends AppCompatActivity {
         String address = binding.addressEditText.getText().toString().trim();
 
         if (name.isEmpty() || phone.isEmpty() || address.isEmpty()) {
-            Toast.makeText(this, "Vui lòng điền đầy đủ thông tin giao hàng", Toast.LENGTH_SHORT).show();
+            ToastHandler.showToast(this, "Vui lòng điền đầy đủ thông tin giao hàng", Toast.LENGTH_SHORT);
             return;
         }
 

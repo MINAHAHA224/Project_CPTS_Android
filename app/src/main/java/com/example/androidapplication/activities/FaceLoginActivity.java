@@ -260,6 +260,7 @@ import com.example.androidapplication.R;
 import com.example.androidapplication.data.model.Status;
 import com.example.androidapplication.utils.FaceNetHelper;
 import com.example.androidapplication.utils.SharedPrefManager;
+import com.example.androidapplication.utils.ToastHandler;
 import com.example.androidapplication.viewmodel.AuthViewModel;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mlkit.vision.common.InputImage;
@@ -322,7 +323,7 @@ public class FaceLoginActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startCamera();
             } else {
-                Toast.makeText(this, "Cần quyền Camera để đăng nhập", Toast.LENGTH_SHORT).show();
+                ToastHandler.showToast(this, "Cần quyền Camera để đăng nhập", Toast.LENGTH_SHORT);
                 finish();
             }
         }
